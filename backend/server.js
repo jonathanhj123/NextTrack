@@ -9,7 +9,6 @@ const server = express();
 server.use(express.static("frontend"));
 server.use(onEachRequest);
 server.listen(port, onServerReady);
-server.get();
 
 function onServerReady() {
   console.log("Jukebox server running on port", port);
