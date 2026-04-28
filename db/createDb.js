@@ -8,127 +8,115 @@ const timestamp = (await db.query("select now() as timestamp")).rows[0][
 ];
 console.log(`Recreating database on ${timestamp}...`);
 
-//Drop alle gamle tables ved opstart
-await db.query("drop table if exists transfers");
-await db.query("drop table if exists address");
-await db.query("drop table if exists pricepoints");
-await db.query("drop table if exists currency");
-await db.query("drop table if exists transaction");
-await db.query("drop table if exists block");
+// Drop alle gamle tables ved opstart
+await db.query("drop table if exists song_artist");
+await db.query("drop table if exists tracks");
+await db.query("drop table if exists genres");
+await db.query("drop table if exists artist");
+await db.query("drop table if exists users");
 
-//lav block table
-await db.query(` 
-    create table block (
-        block_id  integer unique not null,
-        date  text  not null,
-        block_hash text  not null
-    )
-`);
-//importere csv data ind i SQL server
-await upload(
-  db,
-  "db/block.csv",
-  `
-    copy block (block_id, block_hash, date)
-    from stdin
-    with csv header encoding 'utf-8'
-`,
-);
-
-//Lav transaction table
+// Lav genres table
 await db.query(`
-    create table transaction (
-        block_id  integer references block (block_id),
-        transaction_id   integer unique not null,
-        transactions_hash    text not null
-    )
-`);
-await upload(
-  db,
-  "db/transaction.csv",
-  `
-    copy transaction (transaction_id, transactions_hash, block_id)
-    from stdin
-    with csv header encoding 'utf-8'
-`,
-);
-
-//Lav currency table
-await db.query(`
-    create table currency (
-        name    text not null,
-        currency_id    integer unique not null,
-        symbol text not null
-    )   
-`);
-//bigint = 64 bit heltal
-//numeric = 10 cifre før decimalkomma og 2 efter
-await upload(
-  db,
-  "db/currency.csv",
-  `
-    copy currency (currency_id, name,symbol)
-    from stdin
-    with csv header encoding 'utf-8'
-`,
-);
-
-//Lav address table
-await db.query(`
-    create table address (
-        address_id    integer unique not null,
-        address_name    text not null
-    )   
-`);
-await upload(
-  db,
-  "db/address.csv",
-  `
-    copy address (address_id, address_name)
-    from stdin
-    with csv header encoding 'utf-8'
-`,
-);
-
-//pricepoints table
-await db.query(`
-    create table pricepoints (
-        timestamp text not null,
-        usd_price integer not null,
-        currency_id integer not null references currency (currency_id)
+    create table genres (
+        genre_id integer primary key,
+        name text not null
     )
 `);
 
+// Lav artist table
+await db.query(`
+    create table artist (
+        artist_id integer primary key,
+        name text
+    )
+`);
+
+// Lav tracks table
+await db.query(`
+    create table tracks (
+        track_id integer primary key,
+        artist_id integer,
+        title text,
+        length integer not null,
+        genre_id integer not null references genres (genre_id)
+    )
+`);
+
+// Lav song_artist table
+await db.query(`
+    create table song_artist (
+        artist_id integer not null references artist (artist_id),
+        track_id integer not null references tracks (track_id)
+    )
+`);
+
+// Lav users table
+await db.query(`
+    create table users (
+        user_id integer primary key,
+        username text not null,
+        email text unique,
+        age integer not null,
+        gender integer not null,
+        subscriptionlevel integer not null,
+        coinamount integer,
+        country_id integer not null,
+        password text not null
+    )
+`);
+
+//Nu skal vi importere data
+//genres
 await upload(
   db,
-  "db/pricepoints.csv",
+  "db/genres.csv",
   `
-    copy pricepoints (timestamp, currency_id, usd_price)
+    copy genres (genre_id, name)
+    from stdin
+    with csv header encoding 'utf-8'
+`,
+);
+//artist
+await upload(
+  db,
+  "db/artist.csv",
+    `
+    copy artist (artist_id, name)
+    from stdin
+    with csv header encoding 'utf-8'
+`,
+);
+//tracks
+await upload(
+  db,
+  "db/tracks.csv",
+    `
+    copy tracks (track_id, artist_id, title, length, genre_id)
+    from stdin
+    with csv header encoding 'utf-8'
+`,
+);
+//songartist
+await upload(
+  db,
+  "db/song_artist.csv",
+    `
+    copy song_artist (artist_id, track_id)
+    from stdin
+    with csv header encoding 'utf-8'
+`,
+);
+//users
+await upload(
+    db,
+    "db/users.csv",
+    `
+    copy users (user_id, username, email, age, gender, subscriptionlevel, coinamount, country_id, password)
     from stdin
     with csv header encoding 'utf-8'
 `,
 );
 
-//Lav transfers table
-await db.query(`
-    create table transfers (
-        sender_address_id integer not null references address (address_id),
-        receiver_address_id integer not null references address (address_id),
-        transaction_id  integer not null,
-        currency_id   integer not null,
-        amount integer not null
-    )
-`);
-//real = float (32bit floating)
-await upload(
-  db,
-  "db/transfers.csv",
-  `
-    copy transfers (transaction_id,sender_address_id, receiver_address_id, amount , currency_id)
-    from stdin
-    with csv header encoding 'utf-8'
-`,
-);
 
 await db.end();
 console.log("Database successfully recreated.");
