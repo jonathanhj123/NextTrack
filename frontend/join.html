@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>join</title>
     <link rel="stylesheet" href="join.css" />
+    <script>
+    function maxSkip(element) {
+        max = parseInt(element.maxlength.max)
+
+        if (element.value.length >= max && element.nextElementSibling) {
+            element.nextElementSibling.focus();
+        }
+    }
+</script>
 </head>
 <body>
     <a href="index.html" class="button-class">Back</a>
@@ -14,12 +23,12 @@
       </div>
     </div>
     <div class = idContainer>
-        <input type="text" value="" maxlength="1">
-        <input type="number" value="" maxlength="1">
-        <input type="number" value="" maxlength="1">
-        <input type="number" value="" maxlength="1">
-        <input type="number" value="" maxlength="1">
-        <input type="number" value="" maxlength="1">
+        <input type="text" maxlength="1" oninput="maxSkip(this)"/>
+        <input type="text" maxlength="1" oninput="maxSkip(this)"/>
+        <input type="text" maxlength="1" oninput="maxSkip(this)"/>
+        <input type="text" maxlength="1" oninput="maxSkip(this)"/>
+        <input type="text" maxlength="1" oninput="maxSkip(this)"/>
+        <input type="text" maxlength="1" oninput="maxSkip(this)"/>
     </div>
 </body>
 </html>
