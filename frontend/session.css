@@ -14,11 +14,15 @@ main {
   gap: 40px;
 }
 
-.bottom-row {
+#bottom-row {
   display: flex;
   gap: 24px;
 }
 
+/* 
+Transition giver mulighed for at den laver en smooth transition over til hover eller active, 
+hvor den tager det første argument som tiden det skal tage, derefter hvilken måde den skal transition på
+*/
 .button-class {
   display: inline-block;
   width: 220px;
@@ -49,4 +53,18 @@ main {
   background-color: #c8c8c8;
   transform: translateY(0px);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/*
+@media med max-width: 670px benyttes for at justere på skaleringen med henblik på at optimere brugergrænsefladen for mobilbrugere.
+Her tildeler vi vores id nogle nye attributes som kun aktiveres når skærmen har en bredde på mindre end 671px.
+*/
+@media (max-width: 670px) {
+  #bottom-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    width: 100%;
+  }
 }
