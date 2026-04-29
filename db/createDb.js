@@ -12,8 +12,9 @@ console.log(`Recreating database on ${timestamp}...`);
 await db.query("drop table if exists song_artist");
 await db.query("drop table if exists tracks");
 await db.query("drop table if exists genres");
-await db.query("drop table if exists artist");
+await db.query("drop table if exists artists");
 await db.query("drop table if exists users");
+await db.query("drop table if exists countries");
 
 // Lav genres table
 await db.query(`
@@ -25,7 +26,7 @@ await db.query(`
 
 // Lav artist table
 await db.query(`
-    create table artist (
+    create table artists (
         artist_id integer primary key,
         name text
     )
@@ -45,8 +46,16 @@ await db.query(`
 // Lav song_artist table
 await db.query(`
     create table song_artist (
-        artist_id integer not null references artist (artist_id),
+        artist_id integer not null references artists (artist_id),
         track_id integer not null references tracks (track_id)
+    )
+`);
+
+//countries table
+await db.query(`
+    create table countries (
+        country_id integer primary key, 
+        country text
     )
 `);
 
@@ -58,12 +67,13 @@ await db.query(`
         email text unique,
         age integer not null,
         gender integer not null,
-        subscriptionlevel integer not null,
         coinamount integer,
         country_id integer not null,
         password text not null
     )
 `);
+
+
 
 //Nu skal vi importere data
 //genres
@@ -79,9 +89,9 @@ await upload(
 //artist
 await upload(
   db,
-  "db/artist.csv",
+  "db/artists.csv",
     `
-    copy artist (artist_id, name)
+    copy artists (artist_id, name)
     from stdin
     with csv header encoding 'utf-8'
 `,
@@ -111,7 +121,17 @@ await upload(
     db,
     "db/users.csv",
     `
-    copy users (user_id, username, email, age, gender, subscriptionlevel, coinamount, country_id, password)
+    copy users (user_id, username, email, age, gender, coinamount, country_id, password)
+    from stdin
+    with csv header encoding 'utf-8'
+`,
+);
+
+await upload(
+    db,
+    "db/countries.csv",
+    `
+    copy countries (country_id, country)
     from stdin
     with csv header encoding 'utf-8'
 `,
