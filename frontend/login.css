@@ -111,3 +111,22 @@ body {
   gap: 20px;
   margin-top: 5%;
 }
+
+@media (max-width: 670px) {
+  .input-row {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  #registerRow {
+    flex-direction: column;
+    width: 100%;
+    gap: 20px;
+  }
+
+  #tncLabel {
+    position: static; 
+    justify-content: center;
+  }
+}
