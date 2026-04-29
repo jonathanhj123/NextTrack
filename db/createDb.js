@@ -45,7 +45,7 @@ await db.query(`
 // Lav song_artist table
 await db.query(`
     create table song_artist (
-        artist_id integer not null references artist (artist_id),
+        artist_id integer not null references artists (artist_id),
         track_id integer not null references tracks (track_id)
     )
 `);
