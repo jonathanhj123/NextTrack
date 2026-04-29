@@ -6,7 +6,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 5%;
+  margin-top: 50px;
 }
 
 .input-row {
@@ -21,8 +21,8 @@ body {
   padding: 10px 20px;
   font-size: 18px;
   outline: none;
-  background-color: rgba(89, 89, 89, 1);
-  color: white;
+  background-color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
   width: 280px;
 }
 
@@ -35,7 +35,7 @@ body {
 
 #logoContainer {
   text-align: center;
-  margin-top: 3%;
+  margin-top: 75px;
 }
 
 #logoBox p {
@@ -45,6 +45,10 @@ body {
   margin: 0;
 }
 
+/* 
+Transition giver mulighed for at den laver en smooth transition over til hover eller active, 
+hvor den tager det første argument som tiden det skal tage, derefter hvilken måde den skal transition på
+*/
 .button-class {
   display: inline-block;
   color: #1e1e1e;
@@ -110,4 +114,27 @@ body {
   align-items: center;
   gap: 20px;
   margin-top: 5%;
+}
+
+/*
+@media med max-width: 670px benyttes for at justere på skaleringen med henblik på at optimere brugergrænsefladen for mobilbrugere.
+Her tildeler vi vores classes og id's nogle nye attributes som kun aktiveres når skærmen har en bredde på mindre end 671px.
+*/
+@media (max-width: 670px) {
+  .input-row {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  #registerRow {
+    flex-direction: column;
+    width: 100%;
+    gap: 20px;
+  }
+
+  #tncLabel {
+    position: static;
+    justify-content: center;
+  }
 }
