@@ -14,6 +14,7 @@ await db.query("drop table if exists tracks");
 await db.query("drop table if exists genres");
 await db.query("drop table if exists artists");
 await db.query("drop table if exists users");
+await db.query("drop table if exists countries");
 
 // Lav genres table
 await db.query(`
@@ -50,6 +51,14 @@ await db.query(`
     )
 `);
 
+//countries table
+await db.query(`
+    create table countries (
+        country_id integer primary key, 
+        country text
+    )
+`);
+
 // Lav users table
 await db.query(`
     create table users (
@@ -64,13 +73,7 @@ await db.query(`
     )
 `);
 
-//countries table
-await db.query(`
-    create table countries (
-        country_id integer primary key, 
-        country text
-    )
-`);
+
 
 //Nu skal vi importere data
 //genres
@@ -118,7 +121,7 @@ await upload(
     db,
     "db/users.csv",
     `
-    copy users (user_id, username, email, age, gender, subscriptionlevel, coinamount, country_id, password)
+    copy users (user_id, username, email, age, gender, coinamount, country_id, password)
     from stdin
     with csv header encoding 'utf-8'
 `,
