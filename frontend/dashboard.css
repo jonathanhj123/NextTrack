@@ -135,7 +135,7 @@ hvor den tager det første argument som tiden det skal tage, derefter hvilken m�
 }
 
 #leftBottomRightDiv {
-  width: 75%;
+  width: 50%;
   float: left;
 }
 
@@ -175,14 +175,14 @@ hvor den tager det første argument som tiden det skal tage, derefter hvilken m�
 }
 
 #count {
-  float:left;
-  font-size:30px;
-  margin-top:25px;
+  float: left;
+  font-size: 30px;
+  margin-top: 25px;
 }
 
 #count p {
-  padding-left:50px;
-  padding-bottom:50px;
+  margin-left: 250px;
+  padding-bottom: 50px;
 }
 
 .songClass {
@@ -205,6 +205,31 @@ hvor den tager det første argument som tiden det skal tage, derefter hvilken m�
 @media med max-width: 1080px benyttes for at justere på skaleringen med henblik på at optimere brugergrænsefladen for mobil- og tabletbrugere.
 Her tildeler vi vores classes og id's nogle nye attributes som kun aktiveres når skærmen har en bredde på mindre end 671px.
 */
+
+@media (max-width: 1675px) {
+  #count p {
+    margin-left: 200px;
+  }
+}
+
+@media (max-width: 1575px) {
+  #count p {
+    margin-left: 150px;
+  }
+}
+
+@media (max-width: 1350px) {
+  #count p {
+    margin-left: 100px;
+  }
+}
+
+@media (max-width: 1150px) {
+  #count p {
+    margin-left: 75px;
+  }
+}
+
 @media (max-width: 1080px) {
   body {
     flex-direction: column;
@@ -241,10 +266,29 @@ Her tildeler vi vores classes og id's nogle nye attributes som kun aktiveres nå
   }
 
   #count p {
-  padding-bottom:50px;
+    padding-bottom: 50px;
+    margin-left: 200px;
+  }
+
+  #leftBottomRightDiv {
+    width: 65%;
+  }
 }
 
-#leftBottomRightDiv {
-  width: 65%;
+@media (max-width: 930px) {
+  #count p {
+    margin-left: 150px;
+  }
 }
+
+@media (max-width: 775px) {
+  #count p {
+    margin-left: 100px;
+  }
+}
+
+@media (max-width: 620px) {
+  #count p {
+    margin-left: 50px;
+  }
 }
