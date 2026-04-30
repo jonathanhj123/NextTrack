@@ -123,14 +123,76 @@ hvor den tager det første argument som tiden det skal tage, derefter hvilken m�
   margin-top: 5%;
   width: 100%;
   min-height: 700px;
-  background-color: rgb(63, 63, 63);
+  background-color: rgb(24, 24, 24);
   border: 5px solid white;
-  border-radius: 10px;
+  border-radius: 7px;
 }
 
-#bottomRightDiv p {
-  padding: 10px;
+#leftBottomRightDiv {
+  width: 75%;
+  float: left;
+}
+
+#bottomRightDiv table {
+  padding-top: 20px;
+  padding-bottom: 14px;
+  padding-left: 20px;
+  width: 100%;
+}
+
+#rightBottomRightDiv button {
+  float: right;
+  color: #1e1e1e;
+  background-color: rgb(255, 255, 255);
+  border-radius: 12px;
+  font-size: 30px;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0.8em 1.5em;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition:
+    background-color 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
+}
+
+#rightBottomRightDiv button:hover {
+  background-color: #e0e0e0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+#rightBottomRightDiv button:active {
+  background-color: #c8c8c8;
+  transform: translateY(0px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+#count {
+  float:left;
+  font-size:30px;
+  margin-top:25px;
+}
+
+#count p {
+  padding-left:50px;
+  padding-bottom:50px;
+}
+
+.songClass {
   font-size: 25px;
+}
+
+.artistClass {
+  color: rgb(168, 168, 168);
+}
+
+.uneven {
+  background-color: rgb(24, 24, 24);
+}
+
+.even {
+  background-image: linear-gradient(to right, rgb(32, 32, 32), rgb(24, 24, 24));
 }
 
 /*
@@ -167,4 +229,16 @@ Her tildeler vi vores classes og id's nogle nye attributes som kun aktiveres nå
     color: rgb(0, 255, 98);
     font-size: 45px;
   }
+
+  #rightBottomRightDiv button {
+    padding: 0.8em 0.8em;
+  }
+
+  #count p {
+  padding-bottom:50px;
+}
+
+#leftBottomRightDiv {
+  width: 65%;
+}
 }
