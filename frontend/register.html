@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <link rel="stylesheet" href="login.css" />
-    <title>Document</title>
+    <title>Register</title>
   </head>
   <body>
     <a href="index.html" class="button-class">&#8592;</a>
@@ -29,16 +29,33 @@
         </div>
         <div class="input-row">
           <input type="text" id="email" name="email" placeholder="Email" />
-          <input
+          <div id="countrySelect">
+            <select id="countrySelect1">
+              <option value="NA">Select country</option>
+              <option value="DA">Denmark</option>
+              <option value="DE">Germany</option>
+            </select>
+          </div>
+          <!--<input
             type="text"
             id="country"
             name="country"
             placeholder="Country"
-          />
+          />-->
         </div>
         <div class="input-row">
-          <input type="text" id="age" name="DoB" placeholder="Date of birth" />
+            <input type="text" id="age" name="DoB" placeholder="Age" />
+          <div id="genderSelect">
+            <select id="genderSelect1">
+              <option value="NA">Select gender</option>
+              <option value="M">Male</option>
+              <option value="F">Female</option>
+              <option value="NO">Other</option>
+            </select>
+          </div>
+          <!--
           <input type="text" id="gender" name="gender" placeholder="Gender" />
+          -->
         </div>
         <div id="registerRow">
           <label id="tncLabel">
