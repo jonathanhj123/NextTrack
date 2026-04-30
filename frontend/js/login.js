@@ -12,7 +12,7 @@ form.addEventListener("submit", (e) => {
   async function checkLogin(username, password) {
     if (checkUsername(username)) {
       if (await checkPassword(username, password)) {
-        window.location.href = "session.html";
+        window.location.href = "session.html"; // Hvis alt er mødt og alt er true bliver vi sendt videre til session.html
       }
     }
   }
