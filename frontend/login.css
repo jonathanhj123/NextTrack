@@ -26,6 +26,28 @@ body {
   width: 280px;
 }
 
+#countrySelect1 {
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  font-size: 18px;
+  outline: none;
+  background-color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
+  width: 320px;
+}
+
+#genderSelect1 {
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  font-size: 18px;
+  outline: none;
+  background-color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
+  width: 320px;
+}
+
 #logoBox {
   background-color: rgba(89, 89, 89, 1);
   display: inline-block;
