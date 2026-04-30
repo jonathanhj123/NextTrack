@@ -9,22 +9,22 @@ form.addEventListener("submit", (e) => {
   checkLogin(username, password);
 
   async function checkLogin(username, password) {
-    const response = await fetch(`/api/checkIfUserExists/${username}`);
-    console.log(response);
-    if (response.ok) {
-      const userExists = await response.json();
-      console.log(userExists);
-      if (userExists) {
-        if (await checkPassword(username, password)) {
-          window.location.href = "session.html";
-        }
+    if (checkUsername(username)) {
+      if (await checkPassword(username, password)) {
+        window.location.href = "session.html";
       }
     }
   }
-
-  console.log(username);
-  console.log(password);
 });
+
+async function checkUsername(username) {
+  const response = await fetch(`/api/checkIfUserExists/${username}`);
+  if (response.ok) {
+    return await response.json();
+  } else {
+    return false;
+  }
+}
 
 async function checkPassword(username, password) {
   const response = await fetch(`/api/checkPassword`, {
