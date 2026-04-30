@@ -33,7 +33,7 @@ function playTrack(index) { //vi kører playTrack i indexet.
   const tracktitle = document.getElementById("tracktitle");
   tracktitle.textContent = track.title
   const artistname = document.getElementById("artistname");
-  artistname.textContent = ("placeholder")
+  artistname.textContent = track.artist_name
   //TODO ved ny DB skal vi grabbe artist direkte fra tracks.
   
   
