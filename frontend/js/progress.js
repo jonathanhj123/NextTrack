@@ -6,8 +6,7 @@ async function loadTracks(title) { //loadtracks
 
   tracks = data.map(track => ({ //her mapper vi tracks over til tracks index
     title: track.title,
-    length: track.length,
-    artist_name: track.artist_name
+    length: track.length
   }));
   playTrack(0);
   console.log(tracks.length);
