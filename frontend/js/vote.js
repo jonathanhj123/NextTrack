@@ -12,9 +12,12 @@ console.log("vote.js loaded succesfully!")
 const query = document.getElementById("leftBottomRightDiv");
 await buildSongQueue(query);
 
+
 const tracksQueue = [];
 
-async function buildSongQueue() {
+
+async function buildSongQueue(container) {
+    try{
     const response = await fetch ("/tracks");
     const rows = await response.json();
 
@@ -26,12 +29,34 @@ async function buildSongQueue() {
             title: rows[i].title,
             artist: rows[i].artist,
         });
-        return row;
+    }
+
+    renderSongs();
+
+    resetCounters();
+    
+    } catch (error){
+        console.error("Voting Board has failed to load", error);
     }
 }
 
 
-function redArrowIfClicked(element, id) {
-    element.style.color = "red";
-    
+function renderSongs() {
+    const container = document.getElementById("leftBottomRightDiv");
+}
+
+
+function resetCounters(){
+
+}
+
+
+function redArrowIfClicked(buttomElement, counterId) {
+    const counterElem = document.getElementById(counterId);
+
+    let currentCount = parseInt(counterElem.textContent) || 0;
+    currentCount++;
+    counterElem.textContent = currentCount;
+
+    buttomElement.style.color = "red";
 }
