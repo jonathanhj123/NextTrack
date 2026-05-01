@@ -29,3 +29,9 @@ async function buildSongQueue() {
         return row;
     }
 }
+
+
+function redArrowIfClicked(element, id) {
+    element.style.color = "red";
+    
+}
