@@ -129,20 +129,107 @@ hvor den tager det første argument som tiden det skal tage, derefter hvilken m�
   margin-top: 5%;
   width: 100%;
   min-height: 700px;
-  background-color: rgb(63, 63, 63);
+  background-color: rgb(24, 24, 24);
   border: 5px solid white;
-  border-radius: 10px;
+  border-radius: 7px;
 }
 
-#bottomRightDiv p {
-  padding: 10px;
+#leftBottomRightDiv {
+  width: 50%;
+  float: left;
+}
+
+#bottomRightDiv table {
+  padding-top: 20px;
+  padding-bottom: 14px;
+  padding-left: 20px;
+  width: 100%;
+}
+
+#rightBottomRightDiv button {
+  float: right;
+  color: #1e1e1e;
+  background-color: rgb(255, 255, 255);
+  border-radius: 12px;
+  font-size: 30px;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0.8em 1.5em;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition:
+    background-color 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
+}
+
+#rightBottomRightDiv button:hover {
+  background-color: #e0e0e0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+#rightBottomRightDiv button:active {
+  background-color: #c8c8c8;
+  transform: translateY(0px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+#count {
+  float: left;
+  font-size: 30px;
+  margin-top: 25px;
+}
+
+#count p {
+  margin-left: 250px;
+  padding-bottom: 50px;
+}
+
+.songClass {
   font-size: 25px;
+}
+
+.artistClass {
+  color: rgb(168, 168, 168);
+}
+
+.uneven {
+  background-color: rgb(24, 24, 24);
+}
+
+.even {
+  background-image: linear-gradient(to right, rgb(32, 32, 32), rgb(24, 24, 24));
 }
 
 /*
 @media med max-width: 1080px benyttes for at justere på skaleringen med henblik på at optimere brugergrænsefladen for mobil- og tabletbrugere.
 Her tildeler vi vores classes og id's nogle nye attributes som kun aktiveres når skærmen har en bredde på mindre end 671px.
 */
+
+@media (max-width: 1675px) {
+  #count p {
+    margin-left: 200px;
+  }
+}
+
+@media (max-width: 1575px) {
+  #count p {
+    margin-left: 150px;
+  }
+}
+
+@media (max-width: 1350px) {
+  #count p {
+    margin-left: 100px;
+  }
+}
+
+@media (max-width: 1150px) {
+  #count p {
+    margin-left: 75px;
+  }
+}
+
 @media (max-width: 1080px) {
   body {
     flex-direction: column;
@@ -172,5 +259,36 @@ Her tildeler vi vores classes og id's nogle nye attributes som kun aktiveres nå
     height: fit-content;
     color: rgb(0, 255, 98);
     font-size: 45px;
+  }
+
+  #rightBottomRightDiv button {
+    padding: 0.8em 0.8em;
+  }
+
+  #count p {
+    padding-bottom: 50px;
+    margin-left: 200px;
+  }
+
+  #leftBottomRightDiv {
+    width: 65%;
+  }
+}
+
+@media (max-width: 930px) {
+  #count p {
+    margin-left: 150px;
+  }
+}
+
+@media (max-width: 775px) {
+  #count p {
+    margin-left: 100px;
+  }
+}
+
+@media (max-width: 620px) {
+  #count p {
+    margin-left: 50px;
   }
 }

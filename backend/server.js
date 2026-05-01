@@ -19,6 +19,8 @@ function onEachRequest(request, response, next) {
   next();
 } //logging
 
+server.get("/api/checkIfUserExists/:username", checkIfUserExists);
+server.post("/api/checkPassword", checkPassword);
 
 //kendt kode fra dataforståelse
 server.get("/tracks", loadTracks); //dette giver os mulighed for at fetche noget fra /songs i frontend
@@ -70,4 +72,33 @@ async function checkPassword(request, response) {
 
 function onServerReady() {
   console.log("Populii server running on port", port);
+}
+
+async function checkIfUserExists(request, response) {
+  const username = request.params.username;
+
+  const dbResult = await db.query(
+    `
+    Select Exists
+    (select username
+    from users
+    where username = $1)`,
+    [username],
+  );
+  response.json(dbResult.rows[0].exists);
+}
+
+async function checkPassword(request, response) {
+  try {
+    const { username, password } = request.body;
+    const dbResult = await db.query(
+      "SELECT password FROM users WHERE username = $1",
+      [username],
+    );
+    const match = dbResult.rows[0].password === password;
+    response.json({ match });
+  } catch (err) {
+    console.error(err);
+    response.status(500).json({ error: err.message });
+  }
 }
