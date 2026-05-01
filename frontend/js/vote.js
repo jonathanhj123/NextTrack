@@ -13,27 +13,35 @@ const query = document.getElementById("leftBottomRightDiv");
 await buildSongQueue(query);
 
 
+// This is the global array, that will hold the data for the 8 songs
 const tracksQueue = [];
 
 
-async function buildSongQueue(container) {
+async function buildSongQueue() {
     try{
-    const response = await fetch ("/tracks");
-    const rows = await response.json();
+        // In order to pause execution until the server responds, we use 'await'
+        const response = await fetch ("/tracks");
+        const rows = await response.json();
 
-    tracksQueue.length = 0;
+        // Clearing the old data
+        tracksQueue.length = 0;
 
-    for (let i = 0; i < 8; i++){
-        const row = rows[i];
-        tracksQueue.push({
-            title: rows[i].title,
-            artist: rows[i].artist,
-        });
-    }
+        //
+        for (let i = 0; i < 8; i++){
+            //
+            const track = rows[i];
+            //
+            tracksQueue.push({
+                title: track.title,
+                artist: track.artist
+            });
+        }
 
-    renderSongs();
+        //
+        renderSongs();
 
-    resetCounters();
+        //
+        resetCounters();
     
     } catch (error){
         console.error("Voting Board has failed to load", error);
@@ -41,16 +49,19 @@ async function buildSongQueue(container) {
 }
 
 
+//
 function renderSongs() {
     const container = document.getElementById("leftBottomRightDiv");
 }
 
 
+//
 function resetCounters(){
 
 }
 
 
+//
 function redArrowIfClicked(buttomElement, counterId) {
     const counterElem = document.getElementById(counterId);
 
