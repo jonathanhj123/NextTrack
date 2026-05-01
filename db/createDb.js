@@ -22,7 +22,7 @@ await db.query("drop table if exists tracks");
 // Lav users table
 await db.query(`
     create table users (
-        user_id integer primary key,
+        user_id serial primary key,
         username text not null,
         email text unique,
         age integer not null,

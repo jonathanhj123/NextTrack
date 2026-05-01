@@ -12,7 +12,8 @@ server.use(onEachRequest);
 server.listen(port, onServerReady);
 //vores funktioner
 server.get("/api/checkIfUserExists/:username", checkIfUserExists);
-server.post("/api/checkPassword", checkPassword); 
+server.post("/api/checkPassword", checkPassword);
+server.post("/api/register", registerUser); //register user endpoint.
 
 function onEachRequest(request, response, next) {
   console.log(new Date(), request.method, request.url);
@@ -32,10 +33,6 @@ async function loadTracks(request, response) { //load songs til progress.js.
   } else {
     response.json(rows);
   }
-}
-
-function onServerReady() {
-  console.log("Populii server running on port", port);
 }
 
 async function checkIfUserExists(request, response) {
@@ -66,3 +63,27 @@ async function checkPassword(request, response) {
     response.status(500).json({ error: err.message });
   }
 }
+
+async function RegisterUser(request, response) {
+  try { //try / catch som vi har lært om, lidt ala else/if.
+    const { username, password, email, age, country, gender } = request.body; //data vi får fra register.js
+    
+    const dbResult = await db.query(`
+
+      "insert into users 
+      (user_id, username, email, age, gender_id, country, password) 
+      VALUES ($1, $2, $3, $4, $5, $6)", `
+      [username, password, email, age, country, gender]
+      //user_id er defineret som serial i createdb, og er derfor en sekvens hvor den selv finder en ny
+    );
+    response.json({ success: true });
+  } catch (err) { //her tjekker vi for fejl. vil være db relateret, ikke fordi noget eksistere i forvejen, det er seperat
+    console.error(err); //skriv fejlen i konsol
+    response.status(500).json({ error: err.message });
+  }
+}
+
+function onServerReady() {
+  console.log("Populii server running on port", port);
+}
+
