@@ -86,7 +86,7 @@ async function registerUser(request, response) {
     Altså er dette vores "tjek for brugernavn allerede eksistere" tjek.
     */
     if (err.code === "23505") {
-      response.status(500).json({error: "This username already exists"})
+      response.status(500).json({error: "This username/email already exists"})
     }
     else //catch-all for andre fejl.
       response.status(500).json({ error: err.message });

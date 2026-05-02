@@ -49,5 +49,6 @@ form.addEventListener("submit", async (tjek) => { //tjek er egentlig en form for
     window.location.href = "/login.html"; //og send dem videre til login siden
   } else {
     alert(result.error); //Den her viser til burgerne (alert) en fejl (error) fra (result) som er defineret ovenfor.
+    //fejlene er defineret i server.js.
   } 
 });
