@@ -32,7 +32,7 @@ await db.query(`
         session_id integer
     )
 `);
-//TODO sessions
+//VI laver id, email unik. Det er vigtigt vi arbejder med den information i server.js / register.js.
 
 // Lav tracks table
 await db.query(`

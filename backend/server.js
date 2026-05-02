@@ -69,17 +69,25 @@ async function RegisterUser(request, response) {
     const { username, password, email, age, country, gender } = request.body; //data vi får fra register.js
     
     const dbResult = await db.query(`
-
       "insert into users 
       (user_id, username, email, age, gender_id, country, password) 
-      VALUES ($1, $2, $3, $4, $5, $6)", `
+      VALUES ($1, $2, $3, $4, $5, $6)", 
+      `
       [username, password, email, age, country, gender]
       //user_id er defineret som serial i createdb, og er derfor en sekvens hvor den selv finder en ny
     );
     response.json({ success: true });
   } catch (err) { //her tjekker vi for fejl. vil være db relateret, ikke fordi noget eksistere i forvejen, det er seperat
-    console.error(err); //skriv fejlen i konsol
-    response.status(500).json({ error: err.message });
+
+    /*
+    Error code 23505 er PostgreSQLs fejl for når man prøver at skrive en værdi i en tabel som er unik og allerede findes.
+    Altså er dette vores "tjek for brugernavn allerede eksistere" tjek.
+    */
+    if (err.code === "23505") {
+      response.status(500).json({error: "This username already exists"})
+    }
+    else //catch-all for andre fejl.
+      response.status(500).json({ error: err.message });
   }
 }
 
