@@ -3,7 +3,6 @@ import { pool } from "../db/connect.js";
 import req from "express/lib/request.js";
 
 const db = pool();
-
 const port = 3010;
 const server = express();
 server.use(express.static("frontend"));
@@ -14,6 +13,7 @@ server.listen(port, onServerReady);
 server.get("/api/checkIfUserExists/:username", checkIfUserExists);
 server.post("/api/checkPassword", checkPassword);
 server.post("/api/register", registerUser); //register user endpoint.
+
 
 function onEachRequest(request, response, next) {
   console.log(new Date(), request.method, request.url);
@@ -64,16 +64,18 @@ async function checkPassword(request, response) {
   }
 }
 
-async function RegisterUser(request, response) {
+async function registerUser(request, response) {
+  console.log("Register bliver kaldt") //debug, tjek lige at funktionen bliver kaldt når vi submitter register formen.
   try { //try / catch som vi har lært om, lidt ala else/if.
     const { username, password, email, age, country, gender } = request.body; //data vi får fra register.js
     
     const dbResult = await db.query(`
-      "insert into users 
-      (user_id, username, email, age, gender_id, country, password) 
-      VALUES ($1, $2, $3, $4, $5, $6)", 
-      `
-      [username, password, email, age, country, gender]
+
+      insert into users 
+      (username, email, age, gender, country, password) 
+      VALUES ($1, $2, $3, $4, $5, $6)`,
+
+      [username, email, age, gender, country, password]
       //user_id er defineret som serial i createdb, og er derfor en sekvens hvor den selv finder en ny
     );
     response.json({ success: true });
