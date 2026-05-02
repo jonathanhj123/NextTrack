@@ -22,17 +22,20 @@ await db.query("drop table if exists tracks");
 // Lav users table
 await db.query(`
     create table users (
-        user_id integer primary key,
-        username text not null,
-        email text unique,
+        user_id serial primary key,
+        username text unique not null,
+        email text unique not null,
         age integer not null,
-        gender integer not null,
+        gender text not null,
         country text not null,
         password text not null,
         session_id integer
     )
 `);
-//TODO sessions
+
+
+
+//VI laver id, email unik. Det er vigtigt vi arbejder med den information i server.js / register.js.
 
 // Lav tracks table
 await db.query(`
@@ -82,6 +85,14 @@ await upload(
     with csv header encoding 'utf-8'
 `,
 );
+//Gør serial klar, så vi kan tilføje nye.
+await db.query(`
+SELECT setval('users_user_id_seq', (SELECT MAX(user_id) FROM users)); 
+`);
+/*
+Dette kode gør sådan at user_id sekvensen, som laver nye brugere, automatisk starter fra det sted vi er nået til i databasen.
+Gør vi ikke dette, vil vi få en fejl, da vi selv tilføjer IDer i en "serial" når vi importere vores data, dvs. POSTGRE tror vi er på id 0, men vi er reelt på antal brugere.
+*/
 
 await db.end();
 console.log("Database successfully recreated.");
