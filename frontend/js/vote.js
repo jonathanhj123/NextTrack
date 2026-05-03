@@ -56,14 +56,18 @@ async function buildSongQueue() {
 }
 
 
-// Renders trhe songs for the DOM
+// Renders the songs for the DOM
 function renderSongs() {
     // Making "container" into the Element "leftBotoomRIghtDiv" 
     const container = document.getElementById("leftBottomRightDiv");
 
-    // forEach() loops through all 8 songs
-    tracksQueue.forEach((track, index) => {
-        const songNum = index + 1;
+    // Loops through all 8 songs
+    for (let i = 0; i < tracksQueue.length; i++) {
+        // "track" representates the selected item from the "tracksQueue" list
+        const track = tracksQueue[i];
+
+        // With each loop the next ID gets calculated (song1, song2, song3, ...)
+        const songNum = i + 1;
 
         // goes through all specific table songs (song1, song2, ...) based on the loop index
         const table = document.getElementById(`song${songNum}`);
@@ -74,7 +78,7 @@ function renderSongs() {
             cells[0].textContent = track.title;
             cells[1].textContent = track.artist_name;
         }
-    })
+    }
 }
 
 
