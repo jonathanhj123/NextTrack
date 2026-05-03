@@ -6,13 +6,13 @@ Should display count to the left of the button
 JS bool to check if user has upvoted once
 */
 
+
+// The terminal will return a succesful message, if vote.js has been loaded correctly
 console.log("vote.js loaded succesfully!")
 
 
+// Makes hasUserVoted to false at the start, in order to make the user vote
 let hasUserVoted = false;
-
-
-const query = document.getElementById("leftBottomRightDiv");
 
 
 // This is the global array, that will hold the data for the 8 songs
@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 
+// async function that builds the list of songs
 async function buildSongQueue() {
     try{
         // In order to pause execution until the server responds, we use 'await'
@@ -66,13 +67,12 @@ function renderSongs() {
 
         // goes through all specific table songs (song1, song2, ...) based on the loop index
         const table = document.getElementById(`song${songNum}`);
+
         // Selects the two cells inside the table
-        if (table){
-            const cells = table.querySelectorAll('td');
-            if(cells.length >= 2) {
-                cells[0].textContent = track.title;
-                cells[1].textContent = track.artist;
-            }
+        const cells = table.querySelectorAll('td');
+        if(cells.length >= 2) {
+            cells[0].textContent = track.title;
+            cells[1].textContent = track.artist_name;
         }
     })
 }
@@ -81,10 +81,11 @@ function renderSongs() {
 // Resets the votes to 0
 function resetCounters(){
     for (let i = 1; i <= 8; i++) {
+        // counter representates the count in the for-loop
         const counter = document.getElementById(`count${i}`);
-        if (counter) {
-            counter.textContent = "0";
-        }
+
+        // The text content for "counter" resets to 0
+        counter.textContent = "0";
     }
 }
 
@@ -94,32 +95,47 @@ function disableAllButtons() {
     // Going through all buttons
     for (let i = 1; i <= 8; i++) {
         const everyButton = document.getElementById(`button${i}`);
-        if (everyButton) {
-            // the everyButton.disabled becomes "true"
-            everyButton.disabled = true;
-            // The mousecursor is not allowed to click
-            everyButton.style.cursor = "not-allowed";
-        }
+
+        // the everyButton.disabled becomes "true"
+        everyButton.disabled = true;
+
+        // The mousecursor is not allowed to click
+        everyButton.style.cursor = "not-allowed";
+        
     }
 }
 
 
 // Turns the vote Arrow into red and counts one up, if clicked
 function redArrowIfClicked(buttomElement, counterId) {
-    if (hasUserVoted) {
+    // Checks if the user has voted
+    if (hasUserVoted === true) {
+        // It will show an alert
         alert("You can only vote once!");
         return;
     }
 
+    // "counterElem" representates "counterId", which is from the HTML
     const counterElem = document.getElementById(counterId);
 
+    // The currentCount gets the (converted string to integer) text content from "counterElem"/"counterId". If the text content is empty, it will be 0; 
     let currentCount = parseInt(counterElem.textContent) || 0;
+
+    // The currentCount number increases by 1
     currentCount++;
+
+    // The new "currentCount" number becomes the new "textContent" for "counterElem"/"counterId"
     counterElem.textContent = currentCount;
 
+    // turns the backgroundColor to red
     buttomElement.style.backgroundColor = "red";
+
+    // Turns the color of the arrow into white
     buttomElement.style.color = "white";
 
+    // Disables all buttons
     disableAllButtons();
+
+    // Turns the "hasUserVoted" boolean into ture
     hasUserVoted = true;
 }
