@@ -41,7 +41,7 @@ async function buildSongQueue() {
             // Pushing the title and artist_name
             tracksQueue.push({
                 title: track.title,
-                artist: track.artist_name
+                artist_name: track.artist_name
             });
         }
 

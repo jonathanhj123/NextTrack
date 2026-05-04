@@ -17,8 +17,9 @@ server.post("/api/checkPassword", checkPassword);
 server.get("/tracks", loadTracks); //dette giver os mulighed for at fetche noget fra /songs i frontend
 async function loadTracks(request, response) { //load songs til progress.js.
   const dbResolve = await db.query(`
-    select tracks.length, tracks.title
+    select tracks.length, tracks.title, tracks.artist_name
     from tracks
+    order by random()
   `);
   const rows = dbResolve.rows;
   if (rows.length === 0) {
