@@ -38,6 +38,7 @@ async function buildSongQueue() {
         //Turning the Database data into UI data
         for (let i = 0; i < 8; i++){
             const track = rows[i];
+            // Pushing the title and artist_name
             tracksQueue.push({
                 title: track.title,
                 artist: track.artist_name
