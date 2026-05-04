@@ -6,6 +6,7 @@ const db = pool();
 const port = 3010;
 const server = express();
 server.use(express.static("frontend"));
+server.use(express.static("images"));
 server.use(express.json());
 server.use(onEachRequest);
 server.listen(port, onServerReady);
