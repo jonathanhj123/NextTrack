@@ -9,31 +9,38 @@ const timestamp = (await db.query("select now() as timestamp")).rows[0][
 console.log(`Recreating database on ${timestamp}...`);
 
 // Drop alle gamle tables ved opstart
-await db.query("drop schema public cascade");
-await db.query("create schema public");
+//await db.query("drop schema public cascade");
+//await db.query("create schema public");
 //await db.query("drop table if exists users");
+await db.query("drop table if exists users");
+await db.query("drop table if exists session_tracks");
+await db.query("drop table if exists session");
+await db.query("drop table if exists tracks");
+
 //TODO sessions
 
 // Lav users table
 await db.query(`
     create table users (
-        user_id integer primary key,
-        username text not null,
-        email text unique,
+        user_id serial primary key,
+        username text unique not null,
+        email text unique not null,
         age integer not null,
-        gender integer not null,
+        gender text not null,
         country text not null,
         password text not null,
         session_id integer
     )
 `);
-//TODO sessions
 
+
+
+//VI laver id, email unik. Det er vigtigt vi arbejder med den information i server.js / register.js.
 
 // Lav tracks table
 await db.query(`
     create table tracks (
-        track_id integer not null,
+        track_id integer primary key,
         artist_name text,
         title text,
         length integer not null,
@@ -41,7 +48,20 @@ await db.query(`
     )
 `);
 
+// Lav session table
+await db.query(`
+    create table session (
+        session_id integer primary key)
+`);
 
+// Lav session_tracks table
+await db.query(`
+    create table session_tracks (
+        session_id integer references session(session_id),
+        track_id integer references tracks(track_id),
+        primary key (session_id, track_id)
+        )
+    `);
 
 //Nu skal vi importere data
 
@@ -49,7 +69,7 @@ await db.query(`
 await upload(
   db,
   "db/tracks.csv",
-    `
+  `
     copy tracks (track_id, title, length, artist_name, genre)
     from stdin
     with csv header encoding 'utf-8'
@@ -57,14 +77,22 @@ await upload(
 );
 //users TODO sessions
 await upload(
-    db,
-    "db/users.csv",
-    `
+  db,
+  "db/users.csv",
+  `
     copy users (user_id, username, email, age, gender, country, password, session_id)
     from stdin
     with csv header encoding 'utf-8'
 `,
 );
+//Gør serial klar, så vi kan tilføje nye.
+await db.query(`
+SELECT setval('users_user_id_seq', (SELECT MAX(user_id) FROM users)); 
+`);
+/*
+Dette kode gør sådan at user_id sekvensen, som laver nye brugere, automatisk starter fra det sted vi er nået til i databasen.
+Gør vi ikke dette, vil vi få en fejl, da vi selv tilføjer IDer i en "serial" når vi importere vores data, dvs. POSTGRE tror vi er på id 0, men vi er reelt på antal brugere.
+*/
 
 await db.end();
 console.log("Database successfully recreated.");
