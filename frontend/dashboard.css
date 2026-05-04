@@ -192,7 +192,7 @@ hvor den tager det første argument som tiden det skal tage, derefter hvilken m�
   overflow: hidden;
   text-overflow: ellipsis;
   display: block;
-  max-width: 315px;
+  max-width: 500px;
 }
 
 .artistClass {
@@ -223,11 +223,27 @@ Her tildeler vi vores classes og id's nogle nye attributes som kun aktiveres nå
   #count p {
     margin-left: 200px;
   }
+
+  .songClass {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 450px;
+  }
 }
 
 @media (max-width: 1675px) {
   #count p {
     margin-left: 200px;
+  }
+
+  .songClass {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 400px;
   }
 }
 
@@ -235,17 +251,31 @@ Her tildeler vi vores classes og id's nogle nye attributes som kun aktiveres nå
   #count p {
     margin-left: 150px;
   }
+  .songClass {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 350px;
+  }
 }
 
 @media (max-width: 1350px) {
   #count p {
     margin-left: 100px;
   }
+  .songClass {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 275px;
+  }
 }
 
 @media (max-width: 1150px) {
   #count p {
-    margin-left: 75px;
+    margin-left: 65px;
   }
 
   .songClass {
@@ -309,17 +339,40 @@ Her tildeler vi vores classes og id's nogle nye attributes som kun aktiveres nå
   #leftBottomRightDiv {
     width: 65%;
   }
+
+  .songClass {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 600px;
+  }
 }
 
 @media (max-width: 930px) {
   #count p {
     margin-left: 150px;
   }
+  .songClass {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 500px;
+  }
 }
 
 @media (max-width: 775px) {
   #count p {
     margin-left: 100px;
+  }
+
+  .songClass {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 350px;
   }
 }
 
