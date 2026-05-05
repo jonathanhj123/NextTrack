@@ -1,34 +1,87 @@
-const inputs = document.getElementById("inputs");
+const activeQueues = ["829456"];
+
+const inputsContainer = document.getElementById("inputs");
+const submitBtn = document.getElementById("submit");
+const inputElements = document.querySelectorAll(".inputs .input");
+
+function showPopup(message) {
+  if (document.querySelector(".error-popup")) return;
+
+  const popup = document.createElement("div");
+  popup.className = "error-popup";
+  popup.textContent = message;
+  document.body.appendChild(popup);
+
+  setTimeout(() => {
+    popup.remove();
+  }, 2500);
+}
 
 /*
-Tjekker om det indtastede er et tal eller mellemrum. Hvis det er et tal eller mellemrum, sættes blokken til "". Hvis value er et tal, skipper den videre til næste. (e) er event
+Tjekker om det indtastede stemmer overens med aktive ID's
 */
-inputs.addEventListener("input", function (e) {
+function validateAndRedirect() {
+  let enteredId = "";
+  inputElements.forEach((input) => {
+    enteredId += input.value;
+  });
+
+  if (activeQueues.includes(enteredId)) {
+    window.location.href = "dashboard.html";
+  } else {
+    showPopup("Invalid Queue ID. Please try again.");
+
+    inputElements.forEach((input) => (input.value = ""));
+    inputElements[0].focus();
+  }
+}
+
+/*
+Begrænser inputs til kun at være tal
+*/
+inputsContainer.addEventListener("input", function (e) {
   const target = e.target;
   const val = target.value;
 
-  if (isNaN(val) || val == " ") {
+  if (isNaN(val) || val === " ") {
     target.value = "";
     return;
   }
 
-  if (val != "") {
+  if (val !== "") {
     const next = target.nextElementSibling;
-    next.focus();
+    if (next) {
+      next.focus();
+    }
   }
 });
 
 /*
-Tjekker om "keyup" (når en tast bliver sluppet) er delete eller backspace, og i så fald fjerner den hvad der var før samt skipper tilbage til den boks.
+Backspace/delete håndtering
 */
-inputs.addEventListener("keyup", function (e) {
+inputsContainer.addEventListener("keyup", function (e) {
   const target = e.target;
   const key = e.key.toLowerCase();
 
-  if (key == "backspace" || key == "delete") {
+  if (key === "backspace" || key === "delete") {
     target.value = "";
     const prev = target.previousElementSibling;
-    prev.focus();
-    return;
+    if (prev) {
+      prev.focus();
+    }
   }
 });
+
+/*
+Tilføjet funktionalitet til at kunne submitte med Enter-tast
+*/
+inputsContainer.addEventListener("keydown", function (e) {
+  if (e.key === "Enter") {
+    const isComplete = Array.from(inputElements).every((i) => i.value !== "");
+    if (isComplete) {
+      validateAndRedirect();
+    }
+  }
+});
+
+submitBtn.addEventListener("click", validateAndRedirect);
