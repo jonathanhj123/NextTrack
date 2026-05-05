@@ -11,18 +11,42 @@ const tncCheckbox = document.getElementById("tnc");
 const form = document.getElementById("form");
 
 
+//Diverse fejlbeskeder:
+
 //For addeventlistener: ("typen af event", hvad der sker); af et string (click, submit, input)
 form.addEventListener("submit", async (tjek) => { //tjek er egentlig en form for objekt der bliver produceret når vi laver den her eventlistener, det er ikke noget vi selv har defineret, men det er det der kommer ind når vi laver en submit event. Det har en masse information om selve eventet, og det er det vi skal bruge til at lave preventDefault, som er det næste vi gør.
   tjek.preventDefault(); ///preventDefault sikrer, at det ikke er "default form" dvs. tom / ikke checket
 
   if (!tncCheckbox.checked) {
-      window.alert("You must accept the T&C's to register."); //fortæl brugeren de skal godkende
-        /*
-        Moderne browsere behøver faktisk ikke denne funktion, da de ikke vil tillade submit, hvis
-        checkboxen står som "required" i HTML. Det gør vores, men jeg har alligevel denne del.
-        */
-        return; //stop funktionen hvis tnc ikke er accepteret.
-  };
+    window.alert("You must accept the T&C's to register."); //fortæl brugeren de skal godkende
+    /*
+    Moderne browsere behøver faktisk ikke denne funktion, da de ikke vil tillade submit, hvis
+    checkboxen står som "required" i HTML. Det gør vores, men jeg har alligevel denne del.
+    */
+    return; //stop funktionen hvis tnc ikke er accepteret.
+  }
+    //Email tjek. Et relativt simpelt tjek med at det skal have et @. Man kunne nok godt finde alle mulige domæner... virker bøvlet
+  if (!emailInput.value.includes("@")) { //altså vi har emailInput.value, defineret ovenover, som vi tjekker for at inkludere @
+    window.alert("Email must contain '@'");
+    console.log("email check fail"); //debug
+    return;
+  }
+//Alder tjek med kyndig hjælp fra chatten. Det skal læses følgende:
+/*
+/.../ er selveste udtrykket, ^ er starten på strengen, \d+ betyder en eller flere cifre, $ er slutningen på strengen. Så det her tjekker om hele strengen kun består af tal.
+*/
+  if (!/^\d+$/.test(ageInput.value)) {
+    window.alert("Age must be numbers only");
+    console.log("age check fail"); //debug
+    return;
+  }
+//Man kunne lave et alder tjek her...
+
+
+
+
+
+//Selveste dataen indhentes, efter tjek:
 
   const data = {
       //Nu fanger vi alt det data vi skal benytte til at lave en bruger.
