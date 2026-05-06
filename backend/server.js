@@ -14,7 +14,7 @@ server.listen(port, onServerReady);
 server.get("/api/checkIfUserExists/:username", checkIfUserExists);
 server.post("/api/checkPassword", checkPassword);
 server.post("/api/register", registerUser); //register user endpoint.
-
+server.get("/session/:session_id", joinSession); //join session endpoint, tjekker om sessionen findes, og sender succes hvis den gør.
 
 function onEachRequest(request, response, next) {
   console.log(new Date(), request.method, request.url);
@@ -92,6 +92,45 @@ async function registerUser(request, response) {
     }
     else //catch-all for andre fejl.
       response.status(500).json({ error: err.message });
+  }
+}
+
+/*async function SessionCreation(request, response) {
+  try {
+    const { user_id, session_track_id } = request.body;
+    const dbResult = await db.query(`
+      insert into votes (user_id, session_track_id),
+      values ($1, $2)
+      `,
+      [user_id, session_track_id],
+    );
+    response.json({ success: true });
+  } catch (err) {
+    console.log(err);
+  }
+*/
+
+async function joinSession(request, response) { //Fang alle sessions til join.js
+  try {
+    const dbResult = await db.query(`
+      select session_id
+      from session_nt
+      where session_id = $1
+    `, 
+    [request.params.session_id] //vi skal benytte det ID, brugeren skriver ind i join formularen
+    );
+
+    if (dbResult.rows.length === 0) { //hvis rows er lig nul ved responsen, findes den ikke
+      response.status(404).json({ error: "Session not found" }); //Fortæl brugeren den ikke findes
+      return; //send brugeren tilbage til join siden, da sessionen ikke findes
+    }
+
+    else if (dbResult.rows.length === 1) { //hvis der er en session, som matcher det indtastede ID, så send den videre til dashboard
+      response.json({ success: true });
+    } 
+
+  } catch (err) {
+    response.status(500).json({ error: "Something went wrong"}); //skriv fejl hvis en findes
   }
 }
 

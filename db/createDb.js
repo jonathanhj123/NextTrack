@@ -9,13 +9,18 @@ const timestamp = (await db.query("select now() as timestamp")).rows[0][
 console.log(`Recreating database on ${timestamp}...`);
 
 // Drop alle gamle tables ved opstart
-//await db.query("drop schema public cascade");
-//await db.query("create schema public");
+await db.query("drop schema public cascade");
+await db.query("create schema public"); //JEG ELSKER SCHEMA!! FUCK JER
 //await db.query("drop table if exists users");
-await db.query("drop table if exists users");
-await db.query("drop table if exists session_tracks");
-await db.query("drop table if exists session");
-await db.query("drop table if exists tracks");
+//await db.query("drop table if exists users");
+//await db.query("drop table if exists session_tracks");
+//await db.query("drop table if exists session_nt"); //Session kan vi bare blive ved med at lave, så giver ingen grund til at droppe den.
+//await db.query("drop table if exists tracks");
+/*
+Vi har alle pt. data i vores SQL. Giver ingen mening at køre det her,
+eller generelt createdb, konstant.
+Gør det lokalt.
+*/
 
 //TODO sessions
 
@@ -48,22 +53,39 @@ await db.query(`
     )
 `);
 
-// Lav session table
+// Lav session table. Session nt da session læses som noet generelt i sql
 await db.query(`
-    create table session (
+    create table session_nt (
         session_id integer primary key)
 `);
 
-// Lav session_tracks table
+// Lav session_tracks table (hvor vores kø ligger)
 await db.query(`
     create table session_tracks (
-        session_id integer references session(session_id),
+        session_track_id serial primary key,
+        session_id integer references session_nt(session_id),
         track_id integer references tracks(track_id),
-        primary key (session_id, track_id)
+        vote_count integer default 0,
+        fallback_order integer not null,
+        currently_playing boolean default false
         )
     `);
+/*
+Default 0 = starter ved nul. Dvs i stedet for vi får et NULL felt (tomt) vil der stå 0.
+*/
+
+//votes
+await db.query(`
+    create table votes (
+        vote_id serial primary key,
+        user_id integer references users(user_id),
+        session_track_id integer references session_tracks(session_track_id)
+    )
+`);
+
 
 //Nu skal vi importere data
+
 
 //tracks
 await upload(
