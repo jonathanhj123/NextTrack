@@ -40,20 +40,15 @@
             name="email"
             placeholder="Email"
             autocomplete="off"
+            required
           />
           <div id="countrySelect">
-            <select id="countrySelect1">
-              <option value="NA">Select country</option>
+            <select id="countrySelect1" required>
+              <option value="" disabled selected>Select country</option>
               <option value="DA">Denmark</option>
               <option value="DE">Germany</option>
             </select>
           </div>
-          <!--<input
-            type="text"
-            id="country"
-            name="country"
-            placeholder="Country"
-          />-->
         </div>
         <div class="input-row">
           <input
@@ -62,18 +57,16 @@
             name="DoB"
             placeholder="Age"
             autocomplete="off"
+            required
           />
           <div id="genderSelect">
-            <select id="genderSelect1">
-              <option value="NA">Select gender</option>
+            <select id="genderSelect1" required>
+              <option value="" disabled selected>Select gender</option>
               <option value="M">Male</option>
               <option value="F">Female</option>
               <option value="NO">Other</option>
             </select>
           </div>
-          <!--
-          <input type="text" id="gender" name="gender" placeholder="Gender" />
-          -->
         </div>
         <div id="registerRow">
           <label id="tncLabel">
