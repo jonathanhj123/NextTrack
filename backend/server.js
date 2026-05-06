@@ -15,6 +15,8 @@ server.get("/api/checkIfUserExists/:username", checkIfUserExists);
 server.post("/api/checkPassword", checkPassword);
 server.post("/api/register", registerUser); //register user endpoint.
 server.get("/session/:session_id", joinSession); //join session endpoint, tjekker om sessionen findes, og sender succes hvis den gør.
+server.post("/api/createSession", createSession); //create session kald
+
 
 function onEachRequest(request, response, next) {
   console.log(new Date(), request.method, request.url);
@@ -95,20 +97,51 @@ async function registerUser(request, response) {
   }
 }
 
-/*async function SessionCreation(request, response) {
+async function createSession(request, response) {
   try {
-    const { user_id, session_track_id } = request.body;
     const dbResult = await db.query(`
-      insert into votes (user_id, session_track_id),
-      values ($1, $2)
-      `,
-      [user_id, session_track_id],
+      insert into session_nt
+      default values
+      returning session_id
+    `);
+/*
+Vi skal lave en del arbejde når vi laver en kø.
+Vi skal nemlig assigne brugeren der har lavet køen til sessionen
+og vi skal gøre session_tracks klar.
+
+først laver vi sessionen, og får ID retur.
+vi benytter "default values" i session_nt, da session_id er serial
+*/
+    const sessionId = dbResult.rows[0].session_id; //få session id retur
+/*
+    //Nu har vi gemt sessionen i json. Så går vi videre:
+//Vi skal nu tilføje den nye session_id til brugeren der har lavet den
+    await db.query(`
+      update users
+      set session_id = $1
+      where user_id = $2
+    `, [sessionId, request.body.userId] //vi skal have userId fra frontend, da vi skal vide hvilken bruger der har lavet sessionen
     );
-    response.json({ success: true });
+    */
+
+
+//Nu har vi tilføjet session id til brugeren, så går vi videre:
+//Sidst men ikke mindst laver vi en tom kø/session tracks
+    await db.query(`
+      insert into session_tracks (session_id, track_id, fallback_order)
+      select $1, track_id, row_number() over (order by track_id)
+      from tracks
+    `, [sessionId]
+    );
+    //todo forstå sql her
+
+    response.json({ success: true, sessionId });
+
   } catch (err) {
     console.log(err);
+    response.status(500).json({ error: error.message });
   }
-*/
+}
 
 async function joinSession(request, response) { //Fang alle sessions til join.js
   try {

@@ -56,7 +56,7 @@ await db.query(`
 // Lav session table. Session nt da session læses som noet generelt i sql
 await db.query(`
     create table session_nt (
-        session_id integer primary key)
+        session_id serial primary key)
 `);
 
 // Lav session_tracks table (hvor vores kø ligger)
@@ -66,7 +66,7 @@ await db.query(`
         session_id integer references session_nt(session_id),
         track_id integer references tracks(track_id),
         vote_count integer default 0,
-        fallback_order integer not null,
+        fallback_order integer,
         currently_playing boolean default false
         )
     `);
