@@ -35,6 +35,21 @@ h3 {
   margin-left: 1%;
 }
 
+.error-popup {
+  position: fixed;
+  top: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ff4d4d;
+  color: white;
+  padding: 14px 28px;
+  border-radius: 10px;
+  font-family: sans-serif;
+  font-weight: 600;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+
 #topLeftDiv {
   border-top: 0px;
   border-left: 0px;

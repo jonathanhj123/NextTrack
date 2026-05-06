@@ -26,6 +26,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 
+function showPopup(message) {
+  if (document.querySelector(".error-popup")) return;
+
+  const popup = document.createElement("div");
+  popup.className = "error-popup";
+  popup.textContent = message;
+  document.body.appendChild(popup);
+
+  setTimeout(() => {
+    popup.remove();
+  }, 2500);
+}
+
+
 // async function that builds the list of songs
 async function buildSongQueue() {
     try{
@@ -138,7 +152,7 @@ function redArrowIfClicked(buttonElement, counterId) {
         // Checks if the user has voted
         if (hasUserVoted === true) {
             // It will show an alert
-            alert("You can only vote once!");
+            showPopup("You can only vote once!");
             return;
         }
 
