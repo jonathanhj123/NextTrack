@@ -4,7 +4,7 @@
 [x] Should be selectable, should be deselectable, should make sure that a user can only upvote 1 song, the rest should not be selectable when user has used their upvote
 [x] Should display count to the left of the button
 [x] JS bool to check if user has upvoted once
-[] Make it possible for the user to deselect a vote in order to give a different vote
+[x] Make it possible for the user to deselect a vote in order to give a different vote
 */
 
 
@@ -97,21 +97,21 @@ function resetCounters() {
 
 
 // Turns the vote Arrow into red and counts one up, if clicked
-function redArrowIfClicked(buttomElement, counterId) {
+function redArrowIfClicked(buttonElement, counterId) {
     // "counterElem" representates "counterId", which is from the HTML
     const counterElem = document.getElementById(counterId);
     
-    // "computedStyle" representates the style of "buttomElement"
-    const computedStyle = window.getComputedStyle(buttomElement);
+    // "computedStyle" representates the style of "buttonElement"
+    const computedStyle = window.getComputedStyle(buttonElement);
 
-    // "currentColor" representates the backgroundColor of the "computedStyle"/"buttomElement"
+    // "currentColor" representates the backgroundColor of the "computedStyle"/"buttonElement"
     const currentColor = computedStyle.backgroundColor;
 
-    // "buttomIsRed" representates a boolean. If the color is red or rgb("255, 0, 0"), then it's true. Otherwise it's false
-    const buttomIsRed = currentColor === "red" || currentColor.includes("255, 0, 0");
+    // "buttonIsRed" representates a boolean. If the color is red or rgb("255, 0, 0"), then it's true. Otherwise it's false
+    const buttonIsRed = currentColor === "red" || currentColor.includes("255, 0, 0"); // False or True
 
-    // If "buttomIsRed" is true, this code gets executed and the vote will be deselected
-    if(buttomIsRed) {
+    // If "buttonIsRed" is true, this code gets executed and the vote will be deselected
+    if(buttonIsRed) {
         //The "currentCount" gets the (converted string to integer) text content from "counterElem"/"counterId". If the text content is empty, it will be 0; 
         let currentCount = parseInt(counterElem.textContent) || 0;
         
@@ -122,13 +122,13 @@ function redArrowIfClicked(buttomElement, counterId) {
         }
 
         // The backgroundColor gets changed to the original
-        buttomElement.style.backgroundColor = "";
+        buttonElement.style.backgroundColor = "";
 
         // The color gets changed to the original
-        buttomElement.style.color = "";
+        buttonElement.style.color = "";
 
         // The button gets enabled
-        buttomElement.disabled = false;
+        buttonElement.disabled = false;
 
         // The user will not have voted
         hasUserVoted = false;
@@ -152,10 +152,10 @@ function redArrowIfClicked(buttomElement, counterId) {
         counterElem.textContent = currentCount;
 
         // turns the backgroundColor to red
-        buttomElement.style.backgroundColor = "red";
+        buttonElement.style.backgroundColor = "red";
 
         // Turns the color of the arrow into white
-        buttomElement.style.color = "white";
+        buttonElement.style.color = "white";
 
         // Turns the "hasUserVoted" boolean into true
         hasUserVoted = true;
