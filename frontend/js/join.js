@@ -1,4 +1,4 @@
-const activeQueues = ["829456"];
+
 
 const inputsContainer = document.getElementById("inputs");
 const submitBtn = document.getElementById("submit");
@@ -20,19 +20,24 @@ function showPopup(message) {
 /*
 Tjekker om det indtastede stemmer overens med aktive ID's
 */
-function validateAndRedirect() {
-  let enteredId = "";
+async function validateAndRedirect() { 
+  let enteredId = ""; 
   inputElements.forEach((input) => {
-    enteredId += input.value;
+    enteredId += input.value; //vi ændrer enteredId for hver boks
   });
 
-  if (activeQueues.includes(enteredId)) {
-    window.location.href = "dashboard.html";
-  } else {
-    showPopup("Invalid Queue ID. Please try again.");
+  try {
+    const response = await fetch(`/session/${enteredId}`);
 
-    inputElements.forEach((input) => (input.value = ""));
-    inputElements[0].focus();
+    if (response.ok) {
+      window.location.href = `/dashboard.html?session=${enteredId}`; //redirect til dashboard med session_id som query parameter
+    } else {
+      showPopup("Session does not exist.");
+      return;
+    }
+  } catch (err) { //just in case check
+    showPopup("Something went wrong.");
+    return;
   }
 }
 
