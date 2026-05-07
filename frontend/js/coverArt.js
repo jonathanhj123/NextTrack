@@ -36,7 +36,9 @@
     const container = document.getElementById("coverArt");
 
     let img = container.querySelector("img");
-    img = document.createElement("img");
+    if(!img) {
+      img = document.createElement("img");
+    }
     Object.assign(img.style, {
       width: "100%",
       height: "100%",
@@ -72,4 +74,5 @@
 
   // Den kører checkForArtistChange hvert 500. millisekund (to gange i sekundet)
   setInterval(checkForArtistChange, 500);
+  console.log("Cover Art script er klar og kører..."); //debug
 })();
