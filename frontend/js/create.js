@@ -31,6 +31,6 @@ async function createSession() {
 
   } catch (err) {
 
-    console.log(error); //catch all
+    console.log(err); //catch all
   }
 }
