@@ -1,4 +1,6 @@
 console.log("progress.js loaded") //debug, tjek lige at lortet loader
+let tracks = []; //vi starter med alt er nul, dvs. indexet er tomt, det starter ved nul.
+
 
 async function loadTracks(title) { //loadtracks
   const res = await fetch("/tracks"); //i server.js har vi lavet en /tracks ud fra SQL kald 
@@ -11,20 +13,21 @@ async function loadTracks(title) { //loadtracks
   }));
   playTrack(0);
   console.log(tracks.length);
-}
+} //her har vi rederfineret det tomme tracks index mde tracks fra importeret csv
+
 
 //god skik at definere alt med let, så det ikke bliver globalt
-let tracks = []; //vi starter med alt er nul, dvs. indexet er tomt, det starter ved nul.
-//obs: dette bliver jo redefineret ovenover, hvor vi laver data.map for tracks.
+
 let currentIndex = 0;
 let startTime = null;
 let length = 0;
 
 function playTrack(index) { //vi kører playTrack i indexet.
+  console.log("play called");
   const elem = document.getElementById("timeBar");
   elem.style.width = "0%"; //Vi starter fra ny - så vi skal reset timebar
 
-  const track = tracks[index];
+  const tracks = rows;
   if (!track) return; //hvis der ikke er en sang, kan vi ikke
 
   length = track.length * 1000; //vores duration er givet i sekunder i .csv, så vi skal lige gange med 1000 da JS kører i millisekunder.
@@ -69,11 +72,12 @@ function updateProgress(now) { //nu definere vi vores updateProgress. hvor "now"
 
 function nextTrack() {
   currentIndex++; //plus en på indekset, da vi har været en igennem
+  console.log("next called");
 
   if (currentIndex < tracks.length) { //præ konditioner: tjek, at der stadig er sange i indexet
-    playTrack(currentIndex);
+    playTrack(currentIndex); //tjek votes i stedet
   } else {
-    currentIndex = 0; //ellers starter vi forfra
+    currentIndex = 0; //ellers starter vi forfra //hvis ingen votes
     playTrack(currentIndex);
   }
 }

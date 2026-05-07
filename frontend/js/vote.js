@@ -29,9 +29,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function buildSongQueue() {
     try{
         // In order to pause execution until the server responds, we use 'await'
-        const response = await fetch ("/tracks");
+        const response = await fetch ("/tracks"); //samme funktion som progress.js har
         const rows = await response.json();
-
         // Clearing the old data
         tracksQueue.length = 0;
 
@@ -44,7 +43,6 @@ async function buildSongQueue() {
                 artist_name: track.artist_name
             });
         }
-
         // Renders the songs for the DOM
         renderSongs();
 
