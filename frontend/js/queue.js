@@ -1,3 +1,9 @@
+const params = new URLSearchParams(window.location.search); //Her læser vi session id fra url
+const sessionId = params.get("session");
+const queueid = document.getElementById("queueid"); //vi bruger det også til at skrive ID
+queueid.textContent = `'Q' ID: ${sessionId}`;
+//tidligere i dashboard.js
+
 /*
 Vote = 8 songs + 8 artists combined - title on top, artist below
 Arrow up on the right, grey when not selected, red when selected
@@ -60,6 +66,7 @@ async function addTrackToQueue() {
         title: track.title,
         artist_name: track.artist_name,
         length: track.length
+        //votes: 0 //vi skal også have votes i vores sange
     });
 }
 
@@ -120,7 +127,7 @@ function disableAllButtons() {
 
 
 // Turns the vote Arrow into red and counts one up, if clicked
-function redArrowIfClicked(buttomElement, counterId) {
+function redArrowIfClicked(buttonElement, counterId) {
     // Checks if the user has voted
     if (hasUserVoted === true) {
         // It will show an alert
@@ -141,10 +148,10 @@ function redArrowIfClicked(buttomElement, counterId) {
     counterElem.textContent = currentCount;
 
     // turns the backgroundColor to red
-    buttomElement.style.backgroundColor = "red";
+    buttonElement.style.backgroundColor = "red";
 
     // Turns the color of the arrow into white
-    buttomElement.style.color = "white";
+    buttonElement.style.color = "white";
 
     // Disables all buttons
     disableAllButtons();
