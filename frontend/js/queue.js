@@ -8,7 +8,7 @@ JS bool to check if user has upvoted once
 console.log("queue.js load") //debug, tjek load
 
 let hasUserVoted = false; //user har ikke voted i starten
-const tracksQueue = []; //array for de 8 sange i queue
+let tracksQueue = []; //array for de 8 sange i queue
 
 document.addEventListener('DOMContentLoaded', async () => { //DOM når alt HTML er loadet.
     buildSongQueue(); //calls build of the queue
@@ -24,8 +24,8 @@ async function buildSongQueue() {
         tracksQueue.length = 0;
 
         //Turning the Database data into UI data
-        for (let i = 0; i < 8; i++){
-            const track = rows[i];
+        for (let i = 0; i < 9; i++){ //Vi får 9 sange, da vi skal spille en, også have 8 i kø
+            let track = rows[i];
             // Pushing the title and artist_name
             tracksQueue.push({
                 title: track.title,
@@ -47,16 +47,32 @@ async function buildSongQueue() {
     }
 }
 
+/*
+Denne funktions skal vi benytte for at tilføje nye sange når vi går igennem køen. Det sikrer at vi ikke bare spiller det samme igen og igen.
+*/
+async function addTrackToQueue() {
+    const response = await fetch("/tracks"); //vi fetcher fra tracks, som allerede er random
+    const rows = await response.json(); //får respons i json
+
+    let track = rows[0];
+
+    tracksQueue.push({ //pusher til tracksQueue tabelen det nye data. Det er det vi bruger i renderSongs.
+        title: track.title,
+        artist_name: track.artist_name,
+        length: track.length
+    });
+}
+
 
 // Renders the songs for the DOM
-function renderSongs() {
+async function renderSongs() {
     // Making "container" into the Element "leftBotoomRIghtDiv" 
     const container = document.getElementById("leftBottomRightDiv");
 
     // Loops through all 8 songs
-    for (let i = 0; i < tracksQueue.length; i++) {
+    for (let i = 0; i < 8; i++) { //vi skal have 8 sange i køen, så vi loop igennem 8 gange
         // "track" representates the selected item from the "tracksQueue" list
-        const track = tracksQueue[i];
+        let track = tracksQueue[i + 1]; //vi starter fra i+1, da i=0 er den sang der spiller, og vi skal have de næste 8 sange i køen. Altså sangene i index 1-8.
 
         // With each loop the next ID gets calculated (song1, song2, song3, ...)
         const songNum = i + 1;
@@ -64,8 +80,9 @@ function renderSongs() {
         // goes through all specific table songs (song1, song2, ...) based on the loop index
         const table = document.getElementById(`song${songNum}`);
 
+        const cells = table.querySelectorAll('td'); //vi har 2 celler i hver sang, en til titel og en til artist, så vi selecter begge celler
+
         // Selects the two cells inside the table
-        const cells = table.querySelectorAll('td');
         if(cells.length >= 2) {
             cells[0].textContent = track.title;
             cells[1].textContent = track.artist_name;
@@ -137,6 +154,7 @@ function redArrowIfClicked(buttomElement, counterId) {
 }
 
 //god skik at definere alt med let, så det ikke bliver globalt
+//kode importeret fra gamle progress.js. med ældrninger så det virker med gamle vote.js, ofc.
 
 let currentIndex = 0;
 let startTime = null;
@@ -144,13 +162,17 @@ let length = 0;
 
 function playTrack(index) { //vi kører playTrack i indexet.
     try {
-  console.log("play called");
+  console.log("play called"); //debug
 
   const elem = document.getElementById("timeBar");
   elem.style.width = "0%"; //Vi starter fra ny - så vi skal reset timebar
-  const track = tracksQueue[index]
+  let track = tracksQueue[index]
 
-  //if (!tracksQueue) return; //hvis der ikke er en sang, kan vi ikke
+  renderSongs();
+/*
+Vi skal lige have opdateret sangene i køen, da vi har spillet den første sang, og derfor skal have den næste sang ind i køen.
+Ellers opdatere køen ikke, og der vil fks stå Get Lucky i toppen af køen samtidig med Get Lucky spiller.
+*/
 
   length = track.length * 1000; //vores duration er givet i sekunder i .csv, så vi skal lige gange med 1000 da JS kører i millisekunder.
   startTime = performance.now();
@@ -193,14 +215,10 @@ function updateProgress(now) { //nu definere vi vores updateProgress. hvor "now"
   }
 }
 
-function nextTrack() {
-  currentIndex++; //plus en på indekset, da vi har været en igennem
+async function nextTrack() {
   console.log("next called");
-
-  if (currentIndex < tracksQueue.length) { //præ konditioner: tjek, at der stadig er sange i indexet
-    playTrack(currentIndex); //tjek votes i stedet
-  } else {
-    currentIndex = 0; //ellers starter vi forfra //hvis ingen votes
-    playTrack(currentIndex);
-  }
+    tracksQueue.shift(); //fjerner den første sang i køen, da den nu er spillet
+    await addTrackToQueue(); //tilføjer en ny sang til køen, så vi altid har 8 sange i køen. Her fetcher vi også fra backend.
+    //addtrack er også der hvor vi skubber til TracksQueue.
+    playTrack(0); //starter forfra i køen, da vi har fjernet den første sang, så den næste sang nu er i index 0.
 }
