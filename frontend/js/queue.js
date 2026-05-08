@@ -11,7 +11,6 @@ Should be selectable, should be deselectable, should make sure that a user can o
 Should display count to the left of the button
 JS bool to check if user has upvoted once
 */
-console.log("queue.js load") //debug, tjek load
 
 let hasUserVoted = false; //user har ikke voted i starten
 let tracksQueue = []; //array for de 8 sange i queue
@@ -27,7 +26,7 @@ async function buildSongQueue() {
         const response = await fetch ("/tracks"); //samme funktion som progress.js har
         const rows = await response.json();
         // Clearing the old data
-        tracksQueue.length = 0;
+        tracksQueue.tracklength = 0;
 
         //Turning the Database data into UI data
         for (let i = 0; i < 9; i++){ //Vi får 9 sange, da vi skal spille en, også have 8 i kø
@@ -36,7 +35,8 @@ async function buildSongQueue() {
             tracksQueue.push({
                 title: track.title,
                 artist_name: track.artist_name,
-                length: track.length
+                tracklength: track.length,
+                votes: 0
             });
         }
         // Renders the songs for the DOM
@@ -56,6 +56,7 @@ async function buildSongQueue() {
 /*
 Denne funktions skal vi benytte for at tilføje nye sange når vi går igennem køen. Det sikrer at vi ikke bare spiller det samme igen og igen.
 */
+
 async function addTrackToQueue() {
     const response = await fetch("/tracks"); //vi fetcher fra tracks, som allerede er random
     const rows = await response.json(); //får respons i json
@@ -65,8 +66,8 @@ async function addTrackToQueue() {
     tracksQueue.push({ //pusher til tracksQueue tabelen det nye data. Det er det vi bruger i renderSongs.
         title: track.title,
         artist_name: track.artist_name,
-        length: track.length
-        //votes: 0 //vi skal også have votes i vores sange
+        tracklength: track.length,
+        votes: 0
     });
 }
 
@@ -100,9 +101,9 @@ async function renderSongs() {
 
 // Resets the votes to 0
 function resetCounters(){
-    for (let i = 1; i <= 8; i++) {
+    for (let i = 0; i <= 7; i++) {
         // counter representates the count in the for-loop
-        const counter = document.getElementById(`count${i}`);
+        const counter = document.getElementById(i);
 
         // The text content for "counter" resets to 0
         counter.textContent = "0";
@@ -113,7 +114,7 @@ function resetCounters(){
 // Disables all buttons if a voting button has been clicked
 function disableAllButtons() {
     // Going through all buttons
-    for (let i = 1; i <= 8; i++) {
+    for (let i = 0; i <= 7; i++) {
         const everyButton = document.getElementById(`button${i}`);
 
         // the everyButton.disabled becomes "true"
@@ -129,7 +130,7 @@ function disableAllButtons() {
 // Turns the vote Arrow into red and counts one up, if clicked
 function redArrowIfClicked(buttonElement, counterId) {
     // Checks if the user has voted
-    if (hasUserVoted === true) {
+    if (hasUserVoted) {
         // It will show an alert
         alert("You can only vote once!");
         return;
@@ -137,15 +138,12 @@ function redArrowIfClicked(buttonElement, counterId) {
 
     // "counterElem" representates "counterId", which is from the HTML
     const counterElem = document.getElementById(counterId);
+    counterId++;
 
-    // The currentCount gets the (converted string to integer) text content from "counterElem"/"counterId". If the text content is empty, it will be 0; 
-    let currentCount = parseInt(counterElem.textContent) || 0;
-
-    // The currentCount number increases by 1
-    currentCount++;
-
-    // The new "currentCount" number becomes the new "textContent" for "counterElem"/"counterId"
-    counterElem.textContent = currentCount;
+    tracksQueue[counterId].votes = tracksQueue[counterId ].votes + 1;
+    console.log(tracksQueue);
+   
+    counterElem.textContent = tracksQueue[counterId].votes;
 
     // turns the backgroundColor to red
     buttonElement.style.backgroundColor = "red";
@@ -165,7 +163,7 @@ function redArrowIfClicked(buttonElement, counterId) {
 
 let currentIndex = 0;
 let startTime = null;
-let length = 0;
+let tracklength = 0;
 
 function playTrack(index) { //vi kører playTrack i indexet.
     try {
@@ -181,7 +179,7 @@ Vi skal lige have opdateret sangene i køen, da vi har spillet den første sang,
 Ellers opdatere køen ikke, og der vil fks stå Get Lucky i toppen af køen samtidig med Get Lucky spiller.
 */
 
-  length = track.length * 1000; //vores duration er givet i sekunder i .csv, så vi skal lige gange med 1000 da JS kører i millisekunder.
+  tracklength = track.tracklength * 1000; //vores duration er givet i sekunder i .csv, så vi skal lige gange med 1000 da JS kører i millisekunder.
   startTime = performance.now();
 /*
 performance.now er et kald der i javascript giver et præcist antal millisekunder siden kaldet.
@@ -205,7 +203,7 @@ function updateProgress(now) { //nu definere vi vores updateProgress. hvor "now"
   if (startTime == null) return; // præ kondition: hvis starttiden ikke er defineret kan vi ikke kører det
 
   const elapsed = now - startTime; //tiden der er gået er nu - starttid.
-  const progress = Math.min(elapsed / length, 1);
+  const progress = Math.min(elapsed / tracklength, 1);
   /*
   Vi bruger mathmin til at finde ud af, om elapsed / duration er over 1.
   Hvis det skulle være over 1, forcer vi det til at være 1 (100%)
@@ -224,8 +222,28 @@ function updateProgress(now) { //nu definere vi vores updateProgress. hvor "now"
 
 async function nextTrack() {
   console.log("next called");
-    tracksQueue.shift(); //fjerner den første sang i køen, da den nu er spillet
-    await addTrackToQueue(); //tilføjer en ny sang til køen, så vi altid har 8 sange i køen. Her fetcher vi også fra backend.
+  
     //addtrack er også der hvor vi skubber til TracksQueue.
-    playTrack(0); //starter forfra i køen, da vi har fjernet den første sang, så den næste sang nu er i index 0.
+    tracksQueue.sort((a, b) => b.votes - a.votes)
+    playTrack(0);
+    tracksQueue.shift();
+    //tracksQueue = [];
+    await addTrackToQueue(); //tilføjer en ny sang til køen, så vi altid har 8 sange i køen. Her fetcher vi også fra backend.
+
+    ResetButtons();
+    console.log(tracksQueue);
+
+ //starter forfra i køen, da vi har fjernet den første sang, så den næste sang nu er i index 0.
+}
+
+function ResetButtons() {
+    resetCounters();
+    for (let i = 0; i <= 7; i++) {
+    let buttonElement = document.getElementById(`button${i}`);
+    buttonElement.style.backgroundColor = "white";
+    buttonElement.style.color = "black";
+    buttonElement.disabled = false;
+    buttonElement.style.cursor = "auto";
+    hasUserVoted = false;
+    }
 }
