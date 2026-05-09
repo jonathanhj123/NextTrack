@@ -13,6 +13,7 @@ JS bool to check if user has upvoted once
 */
 
 let hasUserVoted = false; //user har ikke voted i starten
+let votedButton = null; //reference to the button the user voted on
 let tracksQueue = []; //array for de 8 sange i queue
 
 document.addEventListener('DOMContentLoaded', async () => { //DOM når alt HTML er loadet.
@@ -112,6 +113,19 @@ function resetCounters(){
 
 // Turns the vote Arrow into red and counts one up, if clicked
 function redArrowIfClicked(buttonElement, counterId) {
+    // If the user clicks the same red button again, deselect it
+    if (hasUserVoted && buttonElement === votedButton) {
+        const counterElem = document.getElementById(counterId);
+        let pointerId = parseInt(counterId) + 1;
+        tracksQueue[pointerId].votes = tracksQueue[pointerId].votes - 1;
+        counterElem.textContent = tracksQueue[pointerId].votes;
+        buttonElement.style.backgroundColor = "";
+        buttonElement.style.color = "";
+        hasUserVoted = false;
+        votedButton = null;
+        return;
+    }
+
     // Checks if the user has voted
     if (hasUserVoted) {
         // It will show an alert
@@ -133,8 +147,9 @@ function redArrowIfClicked(buttonElement, counterId) {
     // Turns the color of the arrow into white
     buttonElement.style.color = "white";
 
-    // Turns the "hasUserVoted" boolean into ture
+    // Turns the "hasUserVoted" boolean into true
     hasUserVoted = true;
+    votedButton = buttonElement;
     console.log(pointerId);
     console.log(tracksQueue);
 }
@@ -228,5 +243,6 @@ function ResetButtons() {
     buttonElement.disabled = false;
     buttonElement.style.cursor = "auto";
     hasUserVoted = false;
+    votedButton = null;
     }
 }
