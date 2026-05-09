@@ -1,3 +1,6 @@
+/*
+
+*/
 
 
 const inputsContainer = document.getElementById("inputs");

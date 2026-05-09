@@ -1,3 +1,8 @@
+/*
+
+*/
+
+
 const joinbutton = document.getElementById("joinButton");
 joinbutton.addEventListener("click", () => {
     joinRedirect();
