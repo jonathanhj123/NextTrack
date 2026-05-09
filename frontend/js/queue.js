@@ -26,7 +26,7 @@ async function buildSongQueue() {
         const response = await fetch ("/tracks"); //samme funktion som progress.js har
         const rows = await response.json();
         // Clearing the old data
-        tracksQueue.tracklength = 0;
+        //tracksQueue.length = 0;
 
         //Turning the Database data into UI data
         for (let i = 0; i < 9; i++){ //Vi får 9 sange, da vi skal spille en, også have 8 i kø
@@ -110,23 +110,6 @@ function resetCounters(){
     }
 }
 
-
-// Disables all buttons if a voting button has been clicked
-function disableAllButtons() {
-    // Going through all buttons
-    for (let i = 0; i <= 7; i++) {
-        const everyButton = document.getElementById(`button${i}`);
-
-        // the everyButton.disabled becomes "true"
-        everyButton.disabled = true;
-
-        // The mousecursor is not allowed to click
-        everyButton.style.cursor = "not-allowed";
-        
-    }
-}
-
-
 // Turns the vote Arrow into red and counts one up, if clicked
 function redArrowIfClicked(buttonElement, counterId) {
     // Checks if the user has voted
@@ -138,12 +121,11 @@ function redArrowIfClicked(buttonElement, counterId) {
 
     // "counterElem" representates "counterId", which is from the HTML
     const counterElem = document.getElementById(counterId);
-    counterId++;
+    let pointerId = parseInt(counterId) + 1;
 
-    tracksQueue[counterId].votes = tracksQueue[counterId ].votes + 1;
-    console.log(tracksQueue);
-   
-    counterElem.textContent = tracksQueue[counterId].votes;
+    tracksQueue[pointerId].votes = tracksQueue[pointerId].votes + 1;
+
+    counterElem.textContent = tracksQueue[pointerId].votes;
 
     // turns the backgroundColor to red
     buttonElement.style.backgroundColor = "red";
@@ -151,11 +133,10 @@ function redArrowIfClicked(buttonElement, counterId) {
     // Turns the color of the arrow into white
     buttonElement.style.color = "white";
 
-    // Disables all buttons
-    disableAllButtons();
-
     // Turns the "hasUserVoted" boolean into ture
     hasUserVoted = true;
+    console.log(pointerId);
+    console.log(tracksQueue);
 }
 
 //god skik at definere alt med let, så det ikke bliver globalt
@@ -224,13 +205,15 @@ async function nextTrack() {
   console.log("next called");
   
     //addtrack er også der hvor vi skubber til TracksQueue.
+    tracksQueue.shift();
     tracksQueue.sort((a, b) => b.votes - a.votes)
     playTrack(0);
-    tracksQueue.shift();
+
     //tracksQueue = [];
     await addTrackToQueue(); //tilføjer en ny sang til køen, så vi altid har 8 sange i køen. Her fetcher vi også fra backend.
 
     ResetButtons();
+    resetCounters();
     console.log(tracksQueue);
 
  //starter forfra i køen, da vi har fjernet den første sang, så den næste sang nu er i index 0.
