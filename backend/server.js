@@ -2,29 +2,46 @@
 
 */
 
-
+//
 import express, { response } from "express";
+//
 import { pool } from "../db/connect.js";
+//
 import req from "express/lib/request.js";
 
+//
 const db = pool();
+//
 const port = 3010;
+//
 const server = express();
+//
 server.use(express.static("frontend"));
+//
 server.use(express.static("images"));
+//
 server.use(express.json());
+//
 server.use(onEachRequest);
+//
 server.listen(port, onServerReady);
-//vores funktioner
+//[vores funktioner]
+//
 server.get("/api/checkIfUserExists/:username", checkIfUserExists);
+//
 server.post("/api/checkPassword", checkPassword);
+//
 server.post("/api/register", registerUser); //register user endpoint.
+//
 server.get("/session/:session_id", joinSession); //join session endpoint, tjekker om sessionen findes, og sender succes hvis den gør.
+//
 server.post("/api/createSession", createSession); //create session kald
+//
 server.get("/api/getUserId/:username", getUserId);
 
-
+//
 function onEachRequest(request, response, next) {
+  //
   console.log(new Date(), request.method, request.url);
   next();
 } //logging
@@ -45,6 +62,8 @@ async function loadTracks(request, response) { //load songs til progress.js.
   }
 }
 
+
+//
 async function checkIfUserExists(request, response) {
   const username = request.params.username;
 
@@ -59,6 +78,8 @@ async function checkIfUserExists(request, response) {
   response.json(dbResult.rows[0].exists);
 }
 
+
+//
 async function getUserId(request, response) {
   //try {
     const username = request.params.username;
@@ -71,6 +92,8 @@ async function getUserId(request, response) {
   //}
 }
 
+
+//
 async function checkPassword(request, response) {
   try {
     const { username, password } = request.body;
@@ -88,6 +111,8 @@ async function checkPassword(request, response) {
   }
 }
 
+
+//
 async function registerUser(request, response) {
   console.log("Register bliver kaldt") //debug, tjek lige at funktionen bliver kaldt når vi submitter register formen.
   try { //try / catch som vi har lært om, lidt ala else/if.
@@ -117,6 +142,8 @@ async function registerUser(request, response) {
   }
 }
 
+
+//
 async function createSession(request, response) {
   try {
     const dbResult = await db.query(`
@@ -163,6 +190,8 @@ vi benytter "default values" i session_nt, da session_id er serial
   }
 }
 
+
+//
 async function joinSession(request, response) { //Fang alle sessions til join.js
   try {
     const dbResult = await db.query(`
