@@ -3,8 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Queue</title>
-    <script src="/js/progress.js" defer></script>
+    <title>Q</title>
+    <script src="/js/queue.js" defer></script>
+    <script src="/js/coverArt.js" defer></script>
     <link rel="stylesheet" href="dashboard.css" />
     <link rel="stylesheet" href="universal.css" />
     <link rel="icon" type="image/x-icon" href="/NextTrack/images/favicon.ico" />
@@ -17,7 +18,7 @@
     </div>
     <div id="leftDiv">
       <div id="topLeftDiv">
-        <h1>Queue ID: 829456</h1>
+        <h1 id="queueid">'Q' ID: </h1>
         <br />
         <h2>Now playing:</h2>
         <br />
@@ -111,38 +112,36 @@
         </div>
         <div id="rightBottomRightDiv">
           <div id="count">
-            <p id="count1">0</p>
-            <p id="count2">0</p>
-            <p id="count3">0</p>
-            <p id="count4">0</p>
-            <p id="count5">0</p>
-            <p id="count6">0</p>
-            <p id="count7">0</p>
-            <p id="count8">0</p>
+            <p id="0">0</p>
+            <p id="1">0</p>
+            <p id="2">0</p>
+            <p id="3">0</p>
+            <p id="4">0</p>
+            <p id="5">0</p>
+            <p id="6">0</p>
+            <p id="7">0</p>
           </div>
           <div id="buttons">
-            <button id="button1" onclick="redArrowIfClicked(this, 'count1')">
+            <button id="button0" onclick="redArrowIfClicked(this, '0')">
               &#8593;</button
-            ><button id="button2" onclick="redArrowIfClicked(this, 'count2')">
+            ><button id="button1" onclick="redArrowIfClicked(this, '1')">
               &#8593;</button
-            ><button id="button3" onclick="redArrowIfClicked(this, 'count3')">
+            ><button id="button2" onclick="redArrowIfClicked(this, '2')">
               &#8593;</button
-            ><button id="button4" onclick="redArrowIfClicked(this, 'count4')">
+            ><button id="button3" onclick="redArrowIfClicked(this, '3')">
               &#8593;</button
-            ><button id="button5" onclick="redArrowIfClicked(this, 'count5')">
+            ><button id="button4" onclick="redArrowIfClicked(this, '4')">
               &#8593;</button
-            ><button id="button6" onclick="redArrowIfClicked(this, 'count6')">
+            ><button id="button5" onclick="redArrowIfClicked(this, '5')">
               &#8593;</button
-            ><button id="button7" onclick="redArrowIfClicked(this, 'count7')">
+            ><button id="button6" onclick="redArrowIfClicked(this, '6')">
               &#8593;</button
-            ><button id="button8" onclick="redArrowIfClicked(this, 'count8')">
+            ><button id="button7" onclick="redArrowIfClicked(this, '7')">
               &#8593;
             </button>
           </div>
         </div>
       </div>
     </div>
-    <script src="js/vote.js"></script>
-    <script src="js/coverArt.js"></script>
   </body>
 </html>

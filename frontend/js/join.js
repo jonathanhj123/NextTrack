@@ -28,9 +28,13 @@ async function validateAndRedirect() {
 
   try {
     const response = await fetch(`/session/${enteredId}`);
+    //Vi benytter samme kode som i toppen af queue.js til at få fat i user_id fra urlen, som findes deri grundet login.js:
+    const data = await response.json();
+    const params = new URLSearchParams(window.location.search); 
+    const user_id = params.get("user_id");
 
     if (response.ok) {
-      window.location.href = `/dashboard.html?session=${enteredId}`; //redirect til dashboard med session_id som query parameter
+      window.location.href = `/dashboard.html?session=${enteredId}&user_id=${user_id}`; //redirect til dashboard med session_id som query parameter
     } else {
       showPopup("Session does not exist.");
       return;

@@ -16,6 +16,7 @@ server.post("/api/checkPassword", checkPassword);
 server.post("/api/register", registerUser); //register user endpoint.
 server.get("/session/:session_id", joinSession); //join session endpoint, tjekker om sessionen findes, og sender succes hvis den gør.
 server.post("/api/createSession", createSession); //create session kald
+server.get("/api/getUserId/:username", getUserId);
 
 
 function onEachRequest(request, response, next) {
@@ -53,15 +54,29 @@ async function checkIfUserExists(request, response) {
   response.json(dbResult.rows[0].exists);
 }
 
+async function getUserId(request, response) {
+  //try {
+    const username = request.params.username;
+    const dbResult = await db.query(`
+      select user_id from users where username = $1
+      `,[username],
+    ); 
+    response.json(dbResult.rows[0].user_id);
+    console.log(response);
+  //}
+}
+
 async function checkPassword(request, response) {
   try {
     const { username, password } = request.body;
-    const dbResult = await db.query(
-      "SELECT password FROM users WHERE username = $1",
+    const dbResult = await db.query(`
+      select password from users where username = $1
+    `,
       [username],
     );
     const match = dbResult.rows[0].password === password;
-    response.json({ match });
+    response.json({ match }); //vi sender også user_id tilbage, da det er nødvendigt for at lave sessionen i createSession
+    console.log(match);
   } catch (err) {
     console.error(err);
     response.status(500).json({ error: err.message });
@@ -90,7 +105,7 @@ async function registerUser(request, response) {
     Altså er dette vores "tjek for brugernavn allerede eksistere" tjek.
     */
     if (err.code === "23505") {
-      response.status(500).json({error: "This username/email already exists"})
+      response.status(500).json({error: "This username/email already exists"}) //tjekker jo også for email, da det vil være samme fejl. Man kunne nok godt tjekke det mere præcist....
     }
     else //catch-all for andre fejl.
       response.status(500).json({ error: err.message });
