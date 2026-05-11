@@ -8,7 +8,7 @@
 import express, { response } from "express";
 // Imports the pool from connect.js
 import { pool } from "../db/connect.js";
-// 
+// Imports the request file from express
 import req from "express/lib/request.js";
 
 // the pool() function from connect.js assigns it to the variable "db"
@@ -17,15 +17,15 @@ const db = pool();
 const port = 3010;
 // express gets assigned to the variable "server"
 const server = express();
-// 
+// This makes the server use the HTML/CSS/JavaScript (from frontend folder)
 server.use(express.static("frontend"));
-//
+// This makes the server use the pictures and images (from images folder)
 server.use(express.static("images"));
-//
+// This converts raw text into a JavaScript object, in order to access it via request.body
 server.use(express.json());
-//
+// This makes the server run the "onEachRequest" function
 server.use(onEachRequest);
-//
+// Starts the server and tells it to use port 3010 as well as run the "onServerReady" function
 server.listen(port, onServerReady);
 
 //[vores funktioner]
