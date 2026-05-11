@@ -1,21 +1,23 @@
-/*
-
+/*  
+  The HTTP Server (Express)
+  server.js makes the express routes (like "/api/register")
+  It links the routes to functions (like rigisterUser)
 */
 
-//
+// Importing express (The HTTP Server)
 import express, { response } from "express";
-//
+// Imports the pool from connect.js
 import { pool } from "../db/connect.js";
-//
+// 
 import req from "express/lib/request.js";
 
-//
+// the pool() function from connect.js assigns it to the variable "db"
 const db = pool();
-//
+// The Server uses port 3010
 const port = 3010;
-//
+// express gets assigned to the variable "server"
 const server = express();
-//
+// 
 server.use(express.static("frontend"));
 //
 server.use(express.static("images"));
@@ -25,8 +27,9 @@ server.use(express.json());
 server.use(onEachRequest);
 //
 server.listen(port, onServerReady);
+
 //[vores funktioner]
-//
+// 
 server.get("/api/checkIfUserExists/:username", checkIfUserExists);
 //
 server.post("/api/checkPassword", checkPassword);
@@ -48,6 +51,7 @@ function onEachRequest(request, response, next) {
 
 //kendt kode fra dataforståelse
 server.get("/tracks", loadTracks); //dette giver os mulighed for at fetche noget fra /songs i frontend
+
 async function loadTracks(request, response) { //load songs til progress.js.
   const dbResolve = await db.query(`
     select tracks.length, tracks.title, tracks.artist_name
