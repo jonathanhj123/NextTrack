@@ -14,9 +14,11 @@ async function joinRedirect() {
 
     const params = new URLSearchParams(window.location.search); 
     const user_id = params.get("user_id");
-      window.location.href = `/join.html?user_id=${user_id}`;
+    window.location.href = `/join.html?user_id=${user_id}`;
 
-  } catch (err) { 
+  } 
+  catch (err) 
+  { 
     showPopup("Session does not exist");
     return;
   }

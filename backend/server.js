@@ -29,17 +29,17 @@ server.use(onEachRequest);
 server.listen(port, onServerReady);
 
 //[vores funktioner]
-// 
+// Calls the checkIfUserExists function
 server.get("/api/checkIfUserExists/:username", checkIfUserExists);
-//
+// Calls the checkPassword function
 server.post("/api/checkPassword", checkPassword);
-//
-server.post("/api/register", registerUser); //register user endpoint.
-//
-server.get("/session/:session_id", joinSession); //join session endpoint, tjekker om sessionen findes, og sender succes hvis den gør.
-//
-server.post("/api/createSession", createSession); //create session kald
-//
+// Calls the registerUser function
+server.post("/api/register", registerUser);
+// Join session endpoint, tjekker om sessionen findes, og sender succes hvis den gør.
+server.get("/session/:session_id", joinSession); 
+// Calls the createSession function
+server.post("/api/createSession", createSession);
+// Calls the getUserId function
 server.get("/api/getUserId/:username", getUserId);
 
 // 
@@ -224,6 +224,22 @@ async function joinSession(request, response) { //Fang alle sessions til join.js
     response.status(500).json({ error: "Something went wrong"}); //skriv fejl hvis en findes
   }
 }
+
+
+async function leaveSession(request, response) {
+  try {
+    const dbResult = await db.query(`
+      update users
+      set session_id = null
+      where session_id = $1
+    `,
+    [request.params.session_id]
+    );
+  } catch(err) {
+    response.status(500).json({ error: "Something went wrong - Couldn't leave Session"});
+  }
+}
+
 
 function onServerReady() {
   console.log("Populii server running on port", port);
