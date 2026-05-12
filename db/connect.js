@@ -1,6 +1,14 @@
+/*
+
+*/
+
+
+//
 import pg from "pg";
 import dotenv from "dotenv";
 
+
+//
 dotenv.config();
 const env = {
   host: process.env.pg_host,
@@ -11,12 +19,16 @@ const env = {
   ssl: { rejectUnauthorized: false },
 };
 
+
+//
 export async function connect() {
   const client = new pg.Client(env);
   await client.connect();
   return client;
 }
 
+
+//
 export function pool() {
   return new pg.Pool(env);
 }

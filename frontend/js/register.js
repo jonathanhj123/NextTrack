@@ -1,3 +1,8 @@
+/*
+
+*/
+
+
 console.log("register.js loaded"); //debug, tjek lige at lortet loader
 
 //Vi skal bruge brugenes input. Vi benytter DOM til at hente det, og definere det.
