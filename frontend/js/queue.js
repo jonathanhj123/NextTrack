@@ -223,14 +223,16 @@ function updateProgress(now) { //nu definere vi vores updateProgress. hvor "now"
 
 async function nextTrack() {
   console.log("next called");
-  
-    //addtrack er også der hvor vi skubber til TracksQueue.
+//shift fjerner den første sang fra array (pop), da det er den der afspiller
     tracksQueue.shift();
+//så sorterer vi efter votes i arrayet
     tracksQueue.sort((a, b) => b.votes - a.votes)
+//så tilføjer vi en ny sang til arrayet.
+    await addTrackToQueue(); //tilføjer en ny sang til køen, så vi altid har 8 sange i køen. Her fetcher vi også fra backend.
+//og afspiller så den øverste i arrayet, som vi har sorteret.
     playTrack(0);
 
-    //tracksQueue = [];
-    await addTrackToQueue(); //tilføjer en ny sang til køen, så vi altid har 8 sange i køen. Her fetcher vi også fra backend.
+
 
     ResetButtons();
     resetCounters();
