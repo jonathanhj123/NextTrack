@@ -42,7 +42,7 @@ server.post("/api/createSession", createSession); //create session kald
 //
 server.get("/api/getUserId/:username", getUserId);
 
-//
+// 
 function onEachRequest(request, response, next) {
   //
   console.log(new Date(), request.method, request.url);
