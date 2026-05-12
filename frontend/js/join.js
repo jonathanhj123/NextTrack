@@ -1,8 +1,3 @@
-/*
-
-*/
-
-
 const inputsContainer = document.getElementById("inputs");
 const submitBtn = document.getElementById("submit");
 const inputElements = document.querySelectorAll(".inputs .input");

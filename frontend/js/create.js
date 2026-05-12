@@ -1,8 +1,3 @@
-/*
-
-*/
-
-
 const createButton = document.getElementById("createButton");
 //DOM på createButton knappen
 

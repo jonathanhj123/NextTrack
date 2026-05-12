@@ -1,8 +1,3 @@
-/*
-
-*/
-
-
 // '(' i starten og ')()' til slut gør, at koden kører automatisk, så snart den indlæses
 (async function () {
   // artistMap gemmer vores "Navn til ID" par (f.eks. { "Taylor Swift": "1" })
