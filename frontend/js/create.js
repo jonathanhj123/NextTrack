@@ -9,6 +9,15 @@ createButton.addEventListener("click", () => {
 
 async function createSession() {
 
+  const params = new URLSearchParams(window.location.search);
+  const user_id = params.get("user_id") || localStorage.getItem("user_id");
+
+  if (!user_id) {
+    showPopup("User ID is missing. Please log in again.");
+    console.error("Session creation aborted: user_id is null");
+    return; // Stop the function here
+  }
+
   try {
     const response = await fetch("/api/createSession", {
       method: "POST",
@@ -19,8 +28,6 @@ async function createSession() {
 
     //Vi benytter samme kode som i toppen af queue.js til at få fat i user_id fra urlen, som findes deri grundet login.js:
     const data = await response.json();
-    const params = new URLSearchParams(window.location.search); 
-    const user_id = params.get("user_id");
 
     if (response.ok) { //Hvis god respons, så skal vi redirect dem til det nye sessionId
         //sessionId får vi fra server.js, via response.json.
