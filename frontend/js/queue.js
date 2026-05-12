@@ -2,11 +2,11 @@
 
 */
 
-
 const params = new URLSearchParams(window.location.search); //Her læser vi session id fra url
 const sessionId = params.get("session");
 const queueid = document.getElementById("queueid"); //vi bruger det også til at skrive ID
 queueid.textContent = `'Q' ID: ${sessionId}`;
+
 //tidligere i dashboard.js
 
 /*
@@ -224,24 +224,34 @@ function updateProgress(now) { //nu definere vi vores updateProgress. hvor "now"
 async function nextTrack() {
   console.log("next called");
 //shift fjerner den første sang fra array (pop), da det er den der afspiller
-    tracksQueue.shift();
+    tracksQueue.shift
 //så sorterer vi efter votes i arrayet
-    tracksQueue.sort((a, b) => b.votes - a.votes)
-//så tilføjer vi en ny sang til arrayet.
-    await addTrackToQueue(); //tilføjer en ny sang til køen, så vi altid har 8 sange i køen. Her fetcher vi også fra backend.
-//og afspiller så den øverste i arrayet, som vi har sorteret.
-    playTrack(0);
+    tracksQueue.sort((a, b) => b.votes - a.votes);
+
+    playTrack(0); //spiller højst rangeret sang
+
+    /*
+    For loops til at fjerne alt i array og tilføje helt nye, så vi får nye sange hver gang.
+    */
+
+    for (let i = 0; i <= 7; i++) {
+    tracksQueue.shift(i);
+    }
+
+    for (let i = 0; i <= 7; i++) {
+    await addTrackToQueue(i); 
+    } 
 
 
-
+//reset de forskellige ting i UI.
     ResetButtons();
     resetCounters();
-    console.log(tracksQueue);
+    //console.log(tracksQueue); //debug
 
  //starter forfra i køen, da vi har fjernet den første sang, så den næste sang nu er i index 0.
 }
 
-function ResetButtons() {
+function ResetButtons() { //Her kører vi i det store hele bare de forskellige ting vi også kører når folk stemmer, bare omvendt.
     resetCounters();
     for (let i = 0; i <= 7; i++) {
     let buttonElement = document.getElementById(`button${i}`);
