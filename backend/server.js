@@ -1,31 +1,57 @@
+/*  
+  The HTTP Server (Express)
+  server.js makes the express routes (like "/api/register")
+  It links the routes to functions (like rigisterUser)
+*/
+
+// Importing express (The HTTP Server)
 import express, { response } from "express";
+// Imports the pool from connect.js
 import { pool } from "../db/connect.js";
+// Imports the request file from express
 import req from "express/lib/request.js";
 
+// the pool() function from connect.js assigns it to the variable "db"
 const db = pool();
+// The Server uses port 3010
 const port = 3010;
+// express gets assigned to the variable "server"
 const server = express();
+// This makes the server use the HTML/CSS/JavaScript (from frontend folder)
 server.use(express.static("frontend"));
+// This makes the server use the pictures and images (from images folder)
 server.use(express.static("images"));
+// This converts raw text into a JavaScript object, in order to access it via request.body
 server.use(express.json());
+// This makes the server run the "onEachRequest" function
 server.use(onEachRequest);
+// Starts the server and tells it to use port 3010 as well as run the "onServerReady" function
 server.listen(port, onServerReady);
-//vores funktioner
+
+//[vores funktioner]
+// 
 server.get("/api/checkIfUserExists/:username", checkIfUserExists);
+//
 server.post("/api/checkPassword", checkPassword);
+//
 server.post("/api/register", registerUser); //register user endpoint.
+//
 server.get("/session/:session_id", joinSession); //join session endpoint, tjekker om sessionen findes, og sender succes hvis den gør.
+//
 server.post("/api/createSession", createSession); //create session kald
+//
 server.get("/api/getUserId/:username", getUserId);
 
-
+// 
 function onEachRequest(request, response, next) {
+  //
   console.log(new Date(), request.method, request.url);
   next();
 } //logging
 
 //kendt kode fra dataforståelse
 server.get("/tracks", loadTracks); //dette giver os mulighed for at fetche noget fra /songs i frontend
+
 async function loadTracks(request, response) { //load songs til progress.js.
   const dbResolve = await db.query(`
     select tracks.length, tracks.title, tracks.artist_name
@@ -40,6 +66,8 @@ async function loadTracks(request, response) { //load songs til progress.js.
   }
 }
 
+
+//
 async function checkIfUserExists(request, response) {
   const username = request.params.username;
 
@@ -54,6 +82,8 @@ async function checkIfUserExists(request, response) {
   response.json(dbResult.rows[0].exists);
 }
 
+
+//
 async function getUserId(request, response) {
   //try {
     const username = request.params.username;
@@ -66,6 +96,8 @@ async function getUserId(request, response) {
   //}
 }
 
+
+//
 async function checkPassword(request, response) {
   try {
     const { username, password } = request.body;
@@ -83,6 +115,8 @@ async function checkPassword(request, response) {
   }
 }
 
+
+//
 async function registerUser(request, response) {
   console.log("Register bliver kaldt") //debug, tjek lige at funktionen bliver kaldt når vi submitter register formen.
   try { //try / catch som vi har lært om, lidt ala else/if.
@@ -112,6 +146,8 @@ async function registerUser(request, response) {
   }
 }
 
+
+//
 async function createSession(request, response) {
   try {
     const dbResult = await db.query(`
@@ -158,6 +194,8 @@ vi benytter "default values" i session_nt, da session_id er serial
   }
 }
 
+
+//
 async function joinSession(request, response) { //Fang alle sessions til join.js
   try {
     const dbResult = await db.query(`
