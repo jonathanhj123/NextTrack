@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Q</title>
+    <script src="/js/queue.js" defer></script>
+    <script src="/js/coverArt.js" defer></script>
+    <link rel="stylesheet" href="dashboard.css" />
+    <link rel="stylesheet" href="universal.css" />
+    <link rel="icon" type="image/x-icon" href="/NextTrack/images/favicon.ico" />
+  </head>
+  <body>
+    <div id="topDiv">
+      <p>&#8595; Scroll down to vote &#8595;</p>
+      <!-- ^^ dette er UTF-8 Arrows             ^^
+      -->
+    </div>
+    <div id="leftDiv">
+      <div id="topLeftDiv">
+        <h1 id="queueid">Solo</h1>
+        <br />
+        <h2>Now playing:</h2>
+        <br />
+      </div>
+      <div id="middleLeftDiv">
+        <div id="coverArt"></div>
+        <div id="progressBar">
+          <div id="timeBar"></div>
+        </div>
+        <br />
+        <h2 id="tracktitle"></h2>
+        <br />
+        <h3 id="artistname"></h3>
+      </div>
+      <div id="bottomLeftDiv">
+        <div id="leaveButton">
+          <a href="session.html" class="button-class">Leave Queue</a>
+        </div>
+      </div>
+    </div>
+    <div id="rightDiv">
+      <div id="topRightDiv">
+        <h1>VOTE</h1>
+      </div>
+      <div id="bottomRightDiv">
+        <div id="leftBottomRightDiv">
+          <table class="uneven" id="song1">
+            <tr>
+              <td class="songClass"></td>
+            </tr>
+            <tr>
+              <td class="artistClass"></td>
+            </tr>
+          </table>
+          <table class="even" id="song2">
+            <tr>
+              <td class="songClass"></td>
+            </tr>
+            <tr>
+              <td class="artistClass"></td>
+            </tr>
+          </table>
+          <table class="uneven" id="song3">
+            <tr>
+              <td class="songClass"></td>
+            </tr>
+            <tr>
+              <td class="artistClass"></td>
+            </tr>
+          </table>
+          <table class="even" id="song4">
+            <tr>
+              <td class="songClass"></td>
+            </tr>
+            <tr>
+              <td class="artistClass"></td>
+            </tr>
+          </table>
+          <table class="uneven" id="song5">
+            <tr>
+              <td class="songClass"></td>
+            </tr>
+            <tr>
+              <td class="artistClass"></td>
+            </tr>
+          </table>
+          <table class="even" id="song6">
+            <tr>
+              <td class="songClass"></td>
+            </tr>
+            <tr>
+              <td class="artistClass"></td>
+            </tr>
+          </table>
+          <table class="uneven" id="song7">
+            <tr>
+              <td class="songClass"></td>
+            </tr>
+            <tr>
+              <td class="artistClass"></td>
+            </tr>
+          </table>
+          <table class="even" id="song8">
+            <tr>
+              <td class="songClass"></td>
+            </tr>
+            <tr>
+              <td class="artistClass"></td>
+            </tr>
+          </table>
+        </div>
+        <div id="rightBottomRightDiv">
+          <div id="count">
+            <p id="0">0</p>
+            <p id="1">0</p>
+            <p id="2">0</p>
+            <p id="3">0</p>
+            <p id="4">0</p>
+            <p id="5">0</p>
+            <p id="6">0</p>
+            <p id="7">0</p>
+          </div>
+          <div id="buttons">
+            <button id="button0" onclick="redArrowIfClicked(this, '0')">
+              &#8593;</button
+            ><button id="button1" onclick="redArrowIfClicked(this, '1')">
+              &#8593;</button
+            ><button id="button2" onclick="redArrowIfClicked(this, '2')">
+              &#8593;</button
+            ><button id="button3" onclick="redArrowIfClicked(this, '3')">
+              &#8593;</button
+            ><button id="button4" onclick="redArrowIfClicked(this, '4')">
+              &#8593;</button
+            ><button id="button5" onclick="redArrowIfClicked(this, '5')">
+              &#8593;</button
+            ><button id="button6" onclick="redArrowIfClicked(this, '6')">
+              &#8593;</button
+            ><button id="button7" onclick="redArrowIfClicked(this, '7')">
+              &#8593;
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
