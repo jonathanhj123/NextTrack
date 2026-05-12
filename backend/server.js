@@ -164,7 +164,7 @@ først laver vi sessionen, og får ID retur.
 vi benytter "default values" i session_nt, da session_id er serial
 */
     const sessionId = dbResult.rows[0].session_id; //få session id retur
-/*
+
     //Nu har vi gemt sessionen i json. Så går vi videre:
 //Vi skal nu tilføje den nye session_id til brugeren der har lavet den
     await db.query(`
@@ -173,7 +173,7 @@ vi benytter "default values" i session_nt, da session_id er serial
       where user_id = $2
     `, [sessionId, request.body.userId] //vi skal have userId fra frontend, da vi skal vide hvilken bruger der har lavet sessionen
     );
-    */
+    console.log("user session update success")
 
 
 //Nu har vi tilføjet session id til brugeren, så går vi videre:
@@ -198,12 +198,15 @@ vi benytter "default values" i session_nt, da session_id er serial
 //
 async function joinSession(request, response) { //Fang alle sessions til join.js
   try {
+    const sessionId = request.params.session_id; //params fanger i URL, ligesom vi kender fra andre steder i koden
+    const userId = request.query.user_id; //samme her, men med query parameterne (eksempel?=data)
+    
     const dbResult = await db.query(`
       select session_id
       from session_nt
       where session_id = $1
     `, 
-    [request.params.session_id] //vi skal benytte det ID, brugeren skriver ind i join formularen
+    [sessionId] //vi skal benytte det ID, brugeren skriver ind i join formularen
     );
 
     if (dbResult.rows.length === 0) { //hvis rows er lig nul ved responsen, findes den ikke
@@ -211,8 +214,16 @@ async function joinSession(request, response) { //Fang alle sessions til join.js
       return; //send brugeren tilbage til join siden, da sessionen ikke findes
     }
 
-    else if (dbResult.rows.length === 1) { //hvis der er en session, som matcher det indtastede ID, så send den videre til dashboard
-      response.json({ success: true });
+    else if (dbResult.rows.length === 1) { //hvis der er en session, som matcher det indtastede ID, så send den videre til dashboar
+      await db.query(`
+        update users
+        set session_id = $1
+        where user_id = $2
+        `,
+        [sessionId, userId] //Opdater sql med brugeren nu har X session id assigneret.
+      );
+      response.json({ success: true }); //yay
+      console.log("user session update success")
     } 
 
   } catch (err) {

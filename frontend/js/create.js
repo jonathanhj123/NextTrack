@@ -23,7 +23,11 @@ async function createSession() {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
-      } //Definere hvordan vi forventer vores respons.
+      }, //Definere hvordan vi forventer vores respons.
+      body: JSON.stringify({
+        userId: user_id //sender user_id vi har i frontend (urlen) til backend.
+        //Dette benytter vi når vi skal assign user_id til sessions.
+      })
     });
 
     //Vi benytter samme kode som i toppen af queue.js til at få fat i user_id fra urlen, som findes deri grundet login.js:
