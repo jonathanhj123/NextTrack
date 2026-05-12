@@ -219,7 +219,7 @@ hvor den tager det første argument som tiden det skal tage, derefter hvilken m�
   overflow: hidden;
   text-overflow: ellipsis;
   display: block;
-  max-width: 500px;
+  max-width: 850px;
 }
 
 .artistClass {
@@ -242,8 +242,8 @@ hvor den tager det første argument som tiden det skal tage, derefter hvilken m�
 }
 
 /*
-@media med max-width: 1080px benyttes for at justere på skaleringen med henblik på at optimere brugergrænsefladen for mobil- og tabletbrugere.
-Her tildeler vi vores classes og id's nogle nye attributes som kun aktiveres når skærmen har en bredde på mindre end 671px.
+@media med max-width benyttes for at justere på skaleringen med henblik på at optimere brugergrænsefladen for mobil- og tabletbrugere.
+Her tildeler vi vores classes og id's nogle nye attributes som kun aktiveres når skærmen har en bredde på mindre end x antal px.
 */
 
 @media (max-width: 5046px) {

@@ -1,7 +1,3 @@
-/*
-
-*/
-
 const params = new URLSearchParams(window.location.search); //Her læser vi session id fra url
 const sessionId = params.get("session");
 const queueid = document.getElementById("queueid"); //vi bruger det også til at skrive ID
@@ -29,7 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => { //DOM når alt HTML 
 async function buildSongQueue() {
     try{
         // In order to pause execution until the server responds, we use 'await'
-        const response = await fetch ("/tracks"); //samme funktion som progress.js har
+        const response = await fetch ("/tracks"); //samme funktion som progress har
         const rows = await response.json();
         // Clearing the old data
         //tracksQueue.length = 0;
