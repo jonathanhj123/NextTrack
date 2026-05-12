@@ -58,6 +58,12 @@ form.addEventListener("submit", async (tjek) => {
     console.log("email check fail"); //debug
     return;
   }
+  if (!emailInput.value.includes(".")) {
+    //altså vi har emailInput.value, defineret ovenover, som vi tjekker for at inkludere .
+    showPopup("Email must contain '.'");
+    console.log("email check fail"); //debug
+    return;
+  }
   //Alder tjek med kyndig hjælp fra chatten. Det skal læses følgende:
   /*
 /.../ er selveste udtrykket, ^ er starten på strengen, \d+ betyder en eller flere cifre, $ er slutningen på strengen. Så det her tjekker om hele strengen kun består af tal.
