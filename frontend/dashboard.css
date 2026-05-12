@@ -44,7 +44,7 @@ h3 {
   color: white;
   padding: 14px 28px;
   border-radius: 10px;
-  
+
   font-weight: 600;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   pointer-events: none;
@@ -56,6 +56,18 @@ h3 {
   border-right: 0px;
   border-bottom: 1px solid rgb(255, 255, 255);
   margin-top: 2%;
+}
+
+#topLeftDiv2 {
+  border-top: 0px;
+  border-left: 0px;
+  border-right: 0px;
+  border-bottom: 1px solid rgb(255, 255, 255);
+  margin-top: 5.5%;
+}
+
+.queueHidden {
+  display: none;
 }
 
 #coverArt {
@@ -167,7 +179,7 @@ hvor den tager det første argument som tiden det skal tage, derefter hvilken m�
   color: #1e1e1e;
   background-color: rgb(255, 255, 255);
   border-radius: 12px;
-  font-size: 30px;
+  font-size: 29px;
   font-weight: 600;
   text-decoration: none;
   padding: 0.8em 1.5em;
@@ -233,12 +245,76 @@ hvor den tager det første argument som tiden det skal tage, derefter hvilken m�
 @media med max-width: 1080px benyttes for at justere på skaleringen med henblik på at optimere brugergrænsefladen for mobil- og tabletbrugere.
 Her tildeler vi vores classes og id's nogle nye attributes som kun aktiveres når skærmen har en bredde på mindre end 671px.
 */
-@media (max-width: 2560px) {
+
+@media (max-width: 5046px) {
   #count p {
-    margin-left: 250px;
+    margin-left: 850px;
   }
 }
 
+@media (max-width: 4650px) {
+  #count p {
+    margin-left: 800px;
+  }
+}
+
+@media (max-width: 4500px) {
+  #count p {
+    margin-left: 720px;
+  }
+}
+
+@media (max-width: 4000px) {
+  #count p {
+    margin-left: 610px;
+  }
+}
+
+@media (max-width: 3500px) {
+  #count p {
+    margin-left: 500px;
+  }
+}
+
+@media (max-width: 3050px) {
+  #count p {
+    margin-left: 400px;
+  }
+}
+
+@media (max-width: 2560px) {
+  #count p {
+    margin-left: 325px;
+  }
+}
+
+@media (max-width: 2200px) {
+  #count p {
+    margin-left: 275px;
+  }
+
+  .songClass {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 450px;
+  }
+}
+
+@media (max-width: 2000px) {
+  #count p {
+    margin-left: 225px;
+  }
+
+  .songClass {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 450px;
+  }
+}
 
 @media (max-width: 1800px) {
   #count p {
@@ -256,7 +332,7 @@ Her tildeler vi vores classes og id's nogle nye attributes som kun aktiveres nå
 
 @media (max-width: 1675px) {
   #count p {
-    margin-left: 200px;
+    margin-left: 175px;
   }
 
   .songClass {
@@ -270,7 +346,7 @@ Her tildeler vi vores classes og id's nogle nye attributes som kun aktiveres nå
 
 @media (max-width: 1575px) {
   #count p {
-    margin-left: 150px;
+    margin-left: 125px;
   }
   .songClass {
     white-space: nowrap;
@@ -354,7 +430,7 @@ Her tildeler vi vores classes og id's nogle nye attributes som kun aktiveres nå
 
   #count p {
     padding-bottom: 50px;
-    margin-left: 200px;
+    margin-left: 175px;
   }
 
   #leftBottomRightDiv {
@@ -372,7 +448,7 @@ Her tildeler vi vores classes og id's nogle nye attributes som kun aktiveres nå
 
 @media (max-width: 930px) {
   #count p {
-    margin-left: 150px;
+    margin-left: 125px;
   }
   .songClass {
     white-space: nowrap;
@@ -385,7 +461,7 @@ Her tildeler vi vores classes og id's nogle nye attributes som kun aktiveres nå
 
 @media (max-width: 775px) {
   #count p {
-    margin-left: 100px;
+    margin-left: 75px;
   }
 
   .songClass {
@@ -408,5 +484,33 @@ Her tildeler vi vores classes og id's nogle nye attributes som kun aktiveres nå
     text-overflow: ellipsis;
     display: block;
     max-width: 275px;
+  }
+}
+
+@media (max-width: 470px) {
+  #count p {
+    margin-left: 25px;
+  }
+
+  .songClass {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 390px) {
+  #count p {
+    margin-left: 5px;
+  }
+
+  .songClass {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 150px;
   }
 }
