@@ -49,10 +49,17 @@ function onEachRequest(request, response, next) {
   next();
 } //logging
 
-//kendt kode fra dataforståelse
-server.get("/tracks", loadTracks); //dette giver os mulighed for at fetche noget fra /songs i frontend
 
-async function loadTracks(request, response) { //load songs til progress.js.
+
+// Kendt kode fra dataforståelse
+
+
+// Dette giver os mulighed for at fetche noget fra /tracks i frontend
+server.get("/tracks", loadTracks);
+
+
+// Loads tracks
+async function loadTracks(request, response) {
   const dbResolve = await db.query(`
     select tracks.length, tracks.title, tracks.artist_name
     from tracks
@@ -67,7 +74,7 @@ async function loadTracks(request, response) { //load songs til progress.js.
 }
 
 
-//
+// Function that checks if user exists
 async function checkIfUserExists(request, response) {
   const username = request.params.username;
 
@@ -83,9 +90,8 @@ async function checkIfUserExists(request, response) {
 }
 
 
-//
+// Function that returns user id's
 async function getUserId(request, response) {
-  //try {
     const username = request.params.username;
     const dbResult = await db.query(`
       select user_id from users where username = $1
@@ -93,11 +99,10 @@ async function getUserId(request, response) {
     ); 
     response.json(dbResult.rows[0].user_id);
     console.log(response);
-  //}
 }
 
 
-//
+// Function that makes sure the password exists and matches the username
 async function checkPassword(request, response) {
   try {
     const { username, password } = request.body;
@@ -116,7 +121,7 @@ async function checkPassword(request, response) {
 }
 
 
-//
+// Function that registers a new user
 async function registerUser(request, response) {
   console.log("Register bliver kaldt") //debug, tjek lige at funktionen bliver kaldt når vi submitter register formen.
   try { //try / catch som vi har lært om, lidt ala else/if.
@@ -147,7 +152,7 @@ async function registerUser(request, response) {
 }
 
 
-//
+// Function that creates a new session
 async function createSession(request, response) {
   try {
     const dbResult = await db.query(`
