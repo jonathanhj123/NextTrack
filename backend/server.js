@@ -39,8 +39,10 @@ server.post("/api/register", registerUser);
 server.get("/session/:session_id", joinSession); 
 // Calls the createSession function
 server.post("/api/createSession", createSession);
-// Calls the getUserId function
+// Calls the getUserId function''
 server.get("/api/getUserId/:username", getUserId);
+
+server.post("/api/leaveSession", leaveSession)
 
 // 
 function onEachRequest(request, response, next) {
@@ -169,16 +171,16 @@ først laver vi sessionen, og får ID retur.
 vi benytter "default values" i session_nt, da session_id er serial
 */
     const sessionId = dbResult.rows[0].session_id; //få session id retur
-/*
+
     //Nu har vi gemt sessionen i json. Så går vi videre:
-//Vi skal nu tilføje den nye session_id til brugeren der har lavet den
+    //Vi skal nu tilføje den nye session_id til brugeren der har lavet den
     await db.query(`
       update users
       set session_id = $1
       where user_id = $2
     `, [sessionId, request.body.userId] //vi skal have userId fra frontend, da vi skal vide hvilken bruger der har lavet sessionen
     );
-    */
+
 
 
 //Nu har vi tilføjet session id til brugeren, så går vi videre:
@@ -226,14 +228,15 @@ async function joinSession(request, response) { //Fang alle sessions til join.js
 }
 
 
+// function that makes the user leave the session
 async function leaveSession(request, response) {
   try {
     const dbResult = await db.query(`
       update users
       set session_id = null
-      where session_id = $1
+      where user_id = $1
     `,
-    [request.params.session_id]
+    [request.query.user_id]
     );
   } catch(err) {
     response.status(500).json({ error: "Something went wrong - Couldn't leave Session"});

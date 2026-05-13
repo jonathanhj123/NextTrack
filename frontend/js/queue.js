@@ -265,11 +265,3 @@ function ResetButtons() { //Her kører vi i det store hele bare de forskellige t
 }
 
 
-// Makes it possible to leave the session
-async function leaveSession(params) {
-  try {
-    
-  } catch (err) {
-    showPopup("Wasn't able to leave Session")
-  }
-}
