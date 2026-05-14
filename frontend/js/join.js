@@ -43,11 +43,11 @@ async function validateAndRedirect() {
     if (response.ok) {
       window.location.href = `/dashboard.html?session=${enteredId}&user_id=${user_id}`; //redirect til dashboard med session_id som query parameter
     } else {
-      showPopup("Session does not exist.");
+      showPopup("Queue does not exist");
       return;
     }
   } catch (err) { //just in case check
-    showPopup("Something went wrong.");
+    showPopup("Something went wrong");
     console.log(err);
     return;
   }

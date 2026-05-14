@@ -130,6 +130,7 @@ hvor den tager det f√∏rste argument som tiden det skal tage, derefter hvilken m√
   background-color: #e0e0e0;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
   transform: translateY(-2px);
+  cursor: pointer;
 }
 
 .button-class:active {
@@ -142,6 +143,7 @@ hvor den tager det f√∏rste argument som tiden det skal tage, derefter hvilken m√
   display: flex;
   gap: 20px;
   margin-top: 5%;
+  cursor: pointer;
 }
 
 #rightDiv {
@@ -206,6 +208,10 @@ hvor den tager det f√∏rste argument som tiden det skal tage, derefter hvilken m√
   float: left;
   font-size: 30px;
   margin-top: 25px;
+}
+
+.voteButton:hover {
+  cursor: pointer;
 }
 
 #count p {
@@ -421,7 +427,7 @@ Her tildeler vi vores classes og id's nogle nye attributes som kun aktiveres n√•
     text-align: center;
     height: fit-content;
     color: rgb(0, 255, 98);
-    font-size: 45px;
+    font-size: 30px;
   }
 
   #rightBottomRightDiv button {
