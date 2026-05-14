@@ -13,6 +13,12 @@ Should display count to the left of the button
 JS bool to check if user has upvoted once
 */
 
+document.getElementById("leaveButton1").addEventListener("click", () => {
+  const params = new URLSearchParams(window.location.search);
+  const userId = params.get("user_id");
+  window.location.href = `session.html?user_id=${userId}`;
+});
+
 let hasUserVoted = false; //user har ikke voted i starten
 let votedButton = null; //reference to the button the user voted on
 let tracksQueue = []; //array for de 8 sange i queue
