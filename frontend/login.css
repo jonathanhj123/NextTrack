@@ -147,6 +147,7 @@ hvor den tager det f√∏rste argument som tiden det skal tage, derefter hvilken m√
   background-color: #e0e0e0;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
   transform: translateY(-2px);
+  cursor: pointer;
 }
 
 .button-class:active {
