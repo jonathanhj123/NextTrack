@@ -2,6 +2,12 @@ const inputsContainer = document.getElementById("inputs");
 const submitBtn = document.getElementById("submit");
 const inputElements = document.querySelectorAll(".inputs .input");
 
+document.getElementById("back").addEventListener("click", () => {
+  const params = new URLSearchParams(window.location.search);
+  const userId = params.get("user_id");
+  window.location.href = `session.html?user_id=${userId}`;
+});
+
 function showPopup(message) {
   if (document.querySelector(".error-popup")) return;
 
