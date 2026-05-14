@@ -6,7 +6,7 @@ joinbutton.addEventListener("click", () => {
 async function joinRedirect() {
   try {
     const params = new URLSearchParams(window.location.search);
-    const user_id = params.get("user_id") || localStorage.getItem("user_id");
+    const user_id = params.get("user_id")
 
     if (!user_id) {
       showPopup("User ID is missing. Please log in again.");
@@ -34,12 +34,3 @@ function showPopup(message) {
     popup.remove();
   }, 2500);
 }
-
-const backButton = document.getElementById("back");
-
-backButton.addEventListener("click", () => {
-  // Clear the stored ID so they are effectively "logged out"
-  localStorage.removeItem("user_id");
-
-  // The link will naturally take them to index.html because of the href
-});

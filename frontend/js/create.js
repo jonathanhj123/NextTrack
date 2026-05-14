@@ -10,7 +10,7 @@ createButton.addEventListener("click", () => {
 async function createSession() {
 
   const params = new URLSearchParams(window.location.search);
-  const user_id = params.get("user_id") || localStorage.getItem("user_id");
+  const user_id = params.get("user_id")
 
   if (!user_id) {
     showPopup("User ID is missing. Please log in again.");

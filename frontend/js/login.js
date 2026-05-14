@@ -19,7 +19,6 @@ form.addEventListener("submit", (e) => {
         const user_id = data.user_id || data;
 
         if (user_id) {
-          localStorage.setItem("user_id", user_id); //gemmer user_id i lokal browser lager
           window.location.href = "session.html?user_id=" + user_id;
         } else {
           showPopup("Error: Could not load user data.");
