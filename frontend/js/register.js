@@ -44,7 +44,7 @@ form.addEventListener("submit", async (tjek) => {
   tjek.preventDefault(); ///preventDefault sikrer, at det ikke er "default form" dvs. tom / ikke checket
 
   if (!tncCheckbox.checked) {
-    showPopup("You must accept the T&C's to register."); //fortæl brugeren de skal godkende
+    showPopup("You must accept the T&C's to register"); //fortæl brugeren de skal godkende
     /*
     Moderne browsere behøver faktisk ikke denne funktion, da de ikke vil tillade submit, hvis
     checkboxen står som "required" i HTML. Det gør vores, men jeg har alligevel denne del.

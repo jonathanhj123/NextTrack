@@ -111,9 +111,13 @@ await upload(
 await db.query(`
 SELECT setval('users_user_id_seq', (SELECT MAX(user_id) FROM users)); 
 `);
+await db.query(`
+  ALTER SEQUENCE session_nt_session_id_seq RESTART WITH 100001;
+`);
 /*
 Dette kode gør sådan at user_id sekvensen, som laver nye brugere, automatisk starter fra det sted vi er nået til i databasen.
 Gør vi ikke dette, vil vi få en fejl, da vi selv tilføjer IDer i en "serial" når vi importere vores data, dvs. POSTGRE tror vi er på id 0, men vi er reelt på antal brugere.
+Vi starter ligeledes session id på 100001 for at sikre at der er 6 cifre i ID'et
 */
 
 await db.end();

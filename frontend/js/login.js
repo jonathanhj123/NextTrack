@@ -21,15 +21,15 @@ form.addEventListener("submit", (e) => {
         if (user_id) {
           window.location.href = "session.html?user_id=" + user_id;
         } else {
-          showPopup("Error: Could not load user data.");
+          showPopup("Error: Could not load user data");
         }
       } else {
         // Runs if the password check returns false
-        showPopup("Incorrect password. Please try again.");
+        showPopup("Incorrect password. Please try again");
       }
     } else {
       // Runs if the username check returns false
-      showPopup("Username not found.");
+      showPopup("Username not found");
     }
   }
 });
