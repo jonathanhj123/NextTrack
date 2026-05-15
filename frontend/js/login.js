@@ -18,7 +18,11 @@ form.addEventListener("submit", (e) => {
     if (checkUsername(username)) {
       if (await checkPassword(username, password)) {
         let user_id = await getUserId(username);
-        window.location.href = "session.html?user_id=" + user_id; // Hvis alt er mødt og alt er true bliver vi sendt videre til session.html
+        if (user_id) {
+          localStorage.setItem('userId', user_id);
+          console.log("userId", user_id, "saved!");
+          window.location.href = "session.html?user_id=" + user_id; // Hvis alt er mødt og alt er true bliver vi sendt videre til session.html
+        }
       }
     }
   }
@@ -27,7 +31,12 @@ form.addEventListener("submit", (e) => {
 async function getUserId(username) {
   const response = await fetch(`/api/getUserId/${username}`);
   if (response.ok) {
-    return await response.json();
+    const data = await response.json();
+    console.log("Successfully recieved userId from the server", data);
+    return data;
+  } else {
+    console.error("Failed to get user ID");
+    return null;
   }
 }
 
