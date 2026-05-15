@@ -28,13 +28,17 @@ document.addEventListener('DOMContentLoaded', async () => { //DOM når alt HTML 
 });
 
 // async function that builds the list of songs
+
 async function buildSongQueue() {
     try{
         // In order to pause execution until the server responds, we use 'await'
-        const response = await fetch ("/tracks"); //samme funktion som progress har
+        const params = new URLSearchParams(window.location.search);
+        const session_id = params.get("session"); //få session id ud af query parameteren... Samme kode som lige overfor ved leave button.
+        const response = await fetch (`/api/tracks?session_id=${session_id}`); //samme funktion som progress har. vi laver altså en ny tracks side for hver session _id. 
         const rows = await response.json();
+        console.log(response.status); //debug, tjek for respons. 200 er god
         // Clearing the old data
-        //tracksQueue.length = 0;
+        tracksQueue.length = 0;
 
         //Turning the Database data into UI data
         for (let i = 0; i < 9; i++){ //Vi får 9 sange, da vi skal spille en, også have 8 i kø
@@ -44,7 +48,7 @@ async function buildSongQueue() {
                 title: track.title,
                 artist_name: track.artist_name,
                 tracklength: track.length,
-                votes: 0
+                votes: track.vote_count
             });
         }
         // Renders the songs for the DOM
@@ -66,7 +70,9 @@ Denne funktions skal vi benytte for at tilføje nye sange når vi går igennem k
 */
 
 async function addTrackToQueue() {
-    const response = await fetch("/tracks"); //vi fetcher fra tracks, som allerede er random
+    const params = new URLSearchParams(window.location.search); //benyt samme kode som i buildsongqueue
+    const session_id = params.get("session"); 
+    const response = await fetch (`/api/tracks?session_id=${session_id}`); 
     const rows = await response.json(); //får respons i json
 
     let track = rows[0];
@@ -225,32 +231,12 @@ function updateProgress(now) { //nu definere vi vores updateProgress. hvor "now"
 
 async function nextTrack() {
   console.log("next called");
-//shift fjerner den første sang fra array (pop), da det er den der afspiller
-    tracksQueue.shift
-//så sorterer vi efter votes i arrayet
+    tracksQueue.shift(0);
     tracksQueue.sort((a, b) => b.votes - a.votes);
-
-    playTrack(0); //spiller højst rangeret sang
-
-    /*
-    For loops til at fjerne alt i array og tilføje helt nye, så vi får nye sange hver gang.
-    */
-
-    for (let i = 0; i <= 7; i++) {
-    tracksQueue.shift(i);
-    }
-
-    for (let i = 0; i <= 7; i++) {
-    await addTrackToQueue(i); 
-    } 
-
-
-//reset de forskellige ting i UI.
     ResetButtons();
     resetCounters();
-    //console.log(tracksQueue); //debug
+    buildSongQueue();
 
- //starter forfra i køen, da vi har fjernet den første sang, så den næste sang nu er i index 0.
 }
 
 function ResetButtons() { //Her kører vi i det store hele bare de forskellige ting vi også kører når folk stemmer, bare omvendt.
