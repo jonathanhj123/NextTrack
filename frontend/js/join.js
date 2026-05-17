@@ -1,12 +1,11 @@
+/*
+
+*/
+
+
 const inputsContainer = document.getElementById("inputs");
 const submitBtn = document.getElementById("submit");
 const inputElements = document.querySelectorAll(".inputs .input");
-
-document.getElementById("back").addEventListener("click", () => {
-  const params = new URLSearchParams(window.location.search);
-  const userId = params.get("user_id");
-  window.location.href = `session.html?user_id=${userId}`;
-});
 
 function showPopup(message) {
   if (document.querySelector(".error-popup")) return;
@@ -31,24 +30,20 @@ async function validateAndRedirect() {
   });
 
   try {
-
+    const response = await fetch(`/session/${enteredId}`);
+    //Vi benytter samme kode som i toppen af queue.js til at få fat i user_id fra urlen, som findes deri grundet login.js:
+    const data = await response.json();
     const params = new URLSearchParams(window.location.search); 
-    const user_id = params.get("user_id");    //Vi benytter samme kode som i toppen af queue.js til at få fat i user_id fra urlen, som findes deri grundet login.js:
+    const user_id = params.get("user_id");
 
-    const response = await fetch(
-    `/session/${enteredId}?user_id=${user_id}` //Få fat i både user_id og session_id til backend, så vi kan benytte det til kobling i SQL.
-    );
-    const data = await response.json(); //data er json svaret, dvs. response overfor.
- 
     if (response.ok) {
       window.location.href = `/dashboard.html?session=${enteredId}&user_id=${user_id}`; //redirect til dashboard med session_id som query parameter
     } else {
-      showPopup("Queue does not exist");
+      showPopup("Session does not exist.");
       return;
     }
   } catch (err) { //just in case check
-    showPopup("Something went wrong");
-    console.log(err);
+    showPopup("Something went wrong.");
     return;
   }
 }

@@ -1,7 +1,13 @@
+/*
+
+*/
+
+
 const form = document.querySelector("form");
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
+  // your validation / fetch call here if needed
   const username = document.querySelector("#username").value;
   const password = document.querySelector("#password").value;
 
@@ -9,27 +15,15 @@ form.addEventListener("submit", (e) => {
 
   /*En funktion der tjekker om loginnet er gyldigt samt om dataen stemmer overens med dataen i databasen*/
   async function checkLogin(username, password) {
-    const userExists = await checkUsername(username);
-
-    if (userExists) {
-      const passwordMatch = await checkPassword(username, password);
-
-      if (passwordMatch) {
-        const data = await getUserId(username);
-        const user_id = data.user_id || data;
-
+    if (checkUsername(username)) {
+      if (await checkPassword(username, password)) {
+        let user_id = await getUserId(username);
         if (user_id) {
-          window.location.href = "session.html?user_id=" + user_id;
-        } else {
-          showPopup("Error: Could not load user data");
+          localStorage.setItem('userId', user_id);
+          console.log("userId", user_id, "saved!");
+          window.location.href = "session.html?user_id=" + user_id; // Hvis alt er mødt og alt er true bliver vi sendt videre til session.html
         }
-      } else {
-        // Runs if the password check returns false
-        showPopup("Incorrect password. Please try again");
       }
-    } else {
-      // Runs if the username check returns false
-      showPopup("Username not found");
     }
   }
 });
@@ -69,18 +63,4 @@ async function checkPassword(username, password, user_id) {
   });
   const data = await response.json();
   return data.match;
-}
-
-//popup, samme som i join.js
-function showPopup(message) {
-  if (document.querySelector(".error-popup")) return;
-
-  const popup = document.createElement("div");
-  popup.className = "error-popup";
-  popup.textContent = message;
-  document.body.appendChild(popup);
-
-  setTimeout(() => {
-    popup.remove();
-  }, 2500);
 }

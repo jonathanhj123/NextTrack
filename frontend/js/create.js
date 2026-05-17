@@ -1,3 +1,8 @@
+/*
+
+*/
+
+
 const createButton = document.getElementById("createButton");
 //DOM på createButton knappen
 
@@ -8,15 +13,6 @@ createButton.addEventListener("click", () => {
 //tjekker om der bliver kliket, hvis ja, kør createSessions
 
 async function createSession() {
-
-  const params = new URLSearchParams(window.location.search);
-  const user_id = params.get("user_id")
-
-  if (!user_id) {
-    showPopup("User ID is missing. Please log in again.");
-    console.error("Session creation aborted: user_id is null");
-    return; // Stop the function here
-  }
 
   try {
     const params = new URLSearchParams(window.location.search); 
