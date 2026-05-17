@@ -8,14 +8,13 @@ async function joinRedirect() {
     const params = new URLSearchParams(window.location.search);
     const user_id = params.get("user_id")
 
-    if (!user_id) {
-      showPopup("User ID is missing. Please log in again.");
-      console.error("Redirect aborted: user_id is null");
-      return; // Stop the function here so the user isn't sent to join.html
-    }
-
+    const params = new URLSearchParams(window.location.search); 
+    const user_id = params.get("user_id");
     window.location.href = `/join.html?user_id=${user_id}`;
-  } catch (err) {
+
+  } 
+  catch (err) 
+  { 
     showPopup("Session does not exist");
     return;
   }

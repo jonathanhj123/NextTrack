@@ -29,18 +29,20 @@ server.use(onEachRequest);
 server.listen(port, onServerReady);
 
 //[vores funktioner]
-//
+// Calls the checkIfUserExists function
 server.get("/api/checkIfUserExists/:username", checkIfUserExists);
-//
+// Calls the checkPassword function
 server.post("/api/checkPassword", checkPassword);
-//
-server.post("/api/register", registerUser); //register user endpoint.
-//
-server.get("/session/:session_id", joinSession); //join session endpoint, tjekker om sessionen findes, og sender succes hvis den gør.
-//
-server.post("/api/createSession", createSession); //create session kald
-//
+// Calls the registerUser function
+server.post("/api/register", registerUser);
+// Join session endpoint, tjekker om sessionen findes, og sender succes hvis den gør.
+server.get("/session/:session_id", joinSession); 
+// Calls the createSession function
+server.post("/api/createSession", createSession);
+// Calls the getUserId function
 server.get("/api/getUserId/:username", getUserId);
+// Calls the leaveSession function
+server.post("/api/leaveSession", leaveSession)
 
 //
 function onEachRequest(request, response, next) {
@@ -49,11 +51,17 @@ function onEachRequest(request, response, next) {
   next();
 } //logging
 
-//kendt kode fra dataforståelse
-server.get("/tracks", loadTracks); //dette giver os mulighed for at fetche noget fra /songs i frontend
 
+
+// Kendt kode fra dataforståelse
+
+
+// Dette giver os mulighed for at fetche noget fra /tracks i frontend
+server.get("/tracks", loadTracks);
+
+
+// Loads tracks
 async function loadTracks(request, response) {
-  //load songs til progress.js.
   const dbResolve = await db.query(`
     select tracks.length, tracks.title, tracks.artist_name
     from tracks
@@ -67,7 +75,8 @@ async function loadTracks(request, response) {
   }
 }
 
-//
+
+// Function that checks if user exists
 async function checkIfUserExists(request, response) {
   const username = request.params.username;
 
@@ -82,22 +91,22 @@ async function checkIfUserExists(request, response) {
   response.json(dbResult.rows[0].exists);
 }
 
-//
+
+// Function that returns user id's
 async function getUserId(request, response) {
-  //try {
-  const username = request.params.username;
-  const dbResult = await db.query(
-    `
+    const username = request.params.username;
+    const dbResult = await db.query(`
       select user_id from users where username = $1
-      `,
-    [username],
-  );
-  response.json(dbResult.rows[0].user_id);
-  console.log(response);
-  //}
+      `,[username],
+    ); 
+    const userId = dbResult.rows[0].user_id;
+    console.log(response);
+    console.log("Sending userId", userId);
+    response.json(userId);
 }
 
-//
+
+// Function that makes sure the password exists and matches the username
 async function checkPassword(request, response) {
   try {
     const { username, password } = request.body;
@@ -116,7 +125,8 @@ async function checkPassword(request, response) {
   }
 }
 
-//
+
+// Function that registers a new user
 async function registerUser(request, response) {
   console.log("Register bliver kaldt"); //debug, tjek lige at funktionen bliver kaldt når vi submitter register formen.
   try {
@@ -150,9 +160,13 @@ async function registerUser(request, response) {
   }
 }
 
-//
+
+// Function that creates a new session
 async function createSession(request, response) {
   try {
+    console.log("Received userId from frontend:", request.body.userId); 
+    console.log("Type:", typeof request.body.userId);
+
     const dbResult = await db.query(`
       insert into session_nt
       default values
@@ -170,20 +184,17 @@ vi benytter "default values" i session_nt, da session_id er serial
 
     //Nu har vi gemt sessionen i json. Så går vi videre:
     //Vi skal nu tilføje den nye session_id til brugeren der har lavet den
-    await db.query(
-      `
+    await db.query(`
       update users
       set session_id = $1
       where user_id = $2
     `,
       [sessionId, request.body.userId], //vi skal have userId fra frontend, da vi skal vide hvilken bruger der har lavet sessionen
     );
-    console.log("user session update success");
 
     //Nu har vi tilføjet session id til brugeren, så går vi videre:
     //Sidst men ikke mindst laver vi en tom kø/session tracks
-    await db.query(
-      `
+    await db.query(`
       insert into session_tracks (session_id, track_id, fallback_order)
       select $1, track_id, row_number() over (order by track_id)
       from tracks
@@ -236,6 +247,31 @@ async function joinSession(request, response) {
     response.status(500).json({ error: "Something went wrong" }); //skriv fejl hvis en findes
   }
 }
+
+
+// function that makes the user leave the session
+async function leaveSession(request, response) {
+  try {
+    const dbResult = await db.query(`
+      update users
+      set session_id = null
+      where user_id = $1
+    `,
+    [request.body.user_id]
+    );
+
+    if (dbResult.rowCount === 0) {
+      console.log("Couldn't find user to leave session");
+      return response.status(404).json({error: "User not found"});
+    }
+
+    response.json({succes: true});
+
+  } catch(err) {
+    response.status(500).json({ error: "Something went wrong - Couldn't leave Session"});
+  }
+}
+
 
 function onServerReady() {
   console.log("Populii server running on port", port);
