@@ -264,7 +264,5 @@ function ResetButtons() {
     buttonElement.style.cursor = "auto";
     hasUserVoted = false;
     votedButton = null;
-    }
+  }
 }
-
-
