@@ -37,12 +37,7 @@ form.addEventListener("submit", (e) => {
 async function getUserId(username) {
   const response = await fetch(`/api/getUserId/${username}`);
   if (response.ok) {
-    const data = await response.json();
-    console.log("Successfully recieved userId from the server", data);
-    return data;
-  } else {
-    console.error("Failed to get user ID");
-    return null;
+    return await response.json();
   }
 }
 
