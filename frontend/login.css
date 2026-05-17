@@ -15,6 +15,22 @@ body {
   margin-bottom: 20px;
 }
 
+#back{
+  font-size: 50px;
+  padding: 0px 25px 10px 25px;
+  margin: 10px 10px 10px 10px;
+  background: linear-gradient(to right, black 50%, white 50%);
+  background-size: 200% 100%;
+  background-position: right bottom;
+  transition: all .4s ease-out;
+}
+
+#back:hover{
+  background-position: left bottom;
+  color: white;
+  box-shadow: 0 0 5px 5px #fcfcfc;
+}
+
 .error-popup {
   position: fixed;
   top: 25px;
@@ -131,6 +147,7 @@ hvor den tager det f√∏rste argument som tiden det skal tage, derefter hvilken m√
   background-color: #e0e0e0;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
   transform: translateY(-2px);
+  cursor: pointer;
 }
 
 .button-class:active {

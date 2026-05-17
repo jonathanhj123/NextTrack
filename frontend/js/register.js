@@ -1,8 +1,3 @@
-/*
-
-*/
-
-
 console.log("register.js loaded"); //debug, tjek lige at lortet loader
 
 //Vi skal bruge brugenes input. Vi benytter DOM til at hente det, og definere det.
@@ -49,7 +44,7 @@ form.addEventListener("submit", async (tjek) => {
   tjek.preventDefault(); ///preventDefault sikrer, at det ikke er "default form" dvs. tom / ikke checket
 
   if (!tncCheckbox.checked) {
-    showPopup("You must accept the T&C's to register."); //fortæl brugeren de skal godkende
+    showPopup("You must accept the T&C's to register"); //fortæl brugeren de skal godkende
     /*
     Moderne browsere behøver faktisk ikke denne funktion, da de ikke vil tillade submit, hvis
     checkboxen står som "required" i HTML. Det gør vores, men jeg har alligevel denne del.
@@ -60,6 +55,12 @@ form.addEventListener("submit", async (tjek) => {
   if (!emailInput.value.includes("@")) {
     //altså vi har emailInput.value, defineret ovenover, som vi tjekker for at inkludere @
     showPopup("Email must contain '@'");
+    console.log("email check fail"); //debug
+    return;
+  }
+  if (!emailInput.value.includes(".")) {
+    //altså vi har emailInput.value, defineret ovenover, som vi tjekker for at inkludere .
+    showPopup("Email must contain '.'");
     console.log("email check fail"); //debug
     return;
   }

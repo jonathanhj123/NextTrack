@@ -2,7 +2,6 @@ body {
   background-color: rgba(30, 30, 30, 1);
   min-height: 100vh;
   margin: 0;
-  display: flex;
   align-items: center;
   justify-content: center;
 }
@@ -12,6 +11,25 @@ main {
   flex-direction: column;
   align-items: center;
   gap: 40px;
+  margin-top:12%;
+}
+
+#back{
+  font-size: 50px;
+  padding: 0px 0px 10px 0px;
+  margin: 10px 10px 10px 10px;
+  background: linear-gradient(to right, black 50%, white 50%);
+  background-size: 200% 100%;
+  background-position: right bottom;
+  transition: all .4s ease-out;
+  width: 120px;
+}
+
+#back:hover{
+  background-position: left bottom;
+  color: white;
+  box-shadow: 0 0 5px 5px #fcfcfc;
+  cursor: pointer;
 }
 
 #bottom-row {
@@ -47,6 +65,7 @@ hvor den tager det f√∏rste argument som tiden det skal tage, derefter hvilken m√
   background-color: #e0e0e0;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
   transform: translateY(-2px);
+  cursor: pointer;
 }
 
 .button-class:active {

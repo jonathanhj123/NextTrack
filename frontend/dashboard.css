@@ -130,6 +130,7 @@ hvor den tager det første argument som tiden det skal tage, derefter hvilken m�
   background-color: #e0e0e0;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
   transform: translateY(-2px);
+  cursor: pointer;
 }
 
 .button-class:active {
@@ -142,6 +143,7 @@ hvor den tager det første argument som tiden det skal tage, derefter hvilken m�
   display: flex;
   gap: 20px;
   margin-top: 5%;
+  cursor: pointer;
 }
 
 #rightDiv {
@@ -208,6 +210,10 @@ hvor den tager det første argument som tiden det skal tage, derefter hvilken m�
   margin-top: 25px;
 }
 
+.voteButton:hover {
+  cursor: pointer;
+}
+
 #count p {
   margin-left: 250px;
   padding-bottom: 50px;
@@ -219,7 +225,7 @@ hvor den tager det første argument som tiden det skal tage, derefter hvilken m�
   overflow: hidden;
   text-overflow: ellipsis;
   display: block;
-  max-width: 500px;
+  max-width: 850px;
 }
 
 .artistClass {
@@ -242,8 +248,8 @@ hvor den tager det første argument som tiden det skal tage, derefter hvilken m�
 }
 
 /*
-@media med max-width: 1080px benyttes for at justere på skaleringen med henblik på at optimere brugergrænsefladen for mobil- og tabletbrugere.
-Her tildeler vi vores classes og id's nogle nye attributes som kun aktiveres når skærmen har en bredde på mindre end 671px.
+@media med max-width benyttes for at justere på skaleringen med henblik på at optimere brugergrænsefladen for mobil- og tabletbrugere.
+Her tildeler vi vores classes og id's nogle nye attributes som kun aktiveres når skærmen har en bredde på mindre end x antal px.
 */
 
 @media (max-width: 5046px) {
@@ -421,7 +427,7 @@ Her tildeler vi vores classes og id's nogle nye attributes som kun aktiveres nå
     text-align: center;
     height: fit-content;
     color: rgb(0, 255, 98);
-    font-size: 45px;
+    font-size: 30px;
   }
 
   #rightBottomRightDiv button {
