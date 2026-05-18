@@ -40,7 +40,7 @@ async function getUserId(username) {
     return await response.json();
   }
 }
-
+ 
 // Funktion der tjekker om hvorhvidt at brugernavnet overhovedet eksistere i vores database, med en Select exist (sql statement) som returnere en true eller false værdi alt afhængigt af om den er i databasen
 async function checkUsername(username) {
   const response = await fetch(`/api/checkIfUserExists/${username}`);
