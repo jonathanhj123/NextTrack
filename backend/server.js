@@ -41,6 +41,8 @@ server.get("/session/:session_id", joinSession); //join session endpoint, tjekke
 server.post("/api/createSession", createSession); //create session kald
 //
 server.get("/api/getUserId/:username", getUserId);
+//
+server.post("/api/leaveSession", leaveSession);
 
 //
 function onEachRequest(request, response, next) {
@@ -234,6 +236,29 @@ async function joinSession(request, response) {
     }
   } catch (err) {
     response.status(500).json({ error: "Something went wrong" }); //skriv fejl hvis en findes
+  }
+}
+
+// function that makes the user leave the session
+async function leaveSession(request, response) {
+  try {
+    const dbResult = await db.query(`
+      update users
+      set session_id = null
+      where user_id = $1
+    `,
+    [request.body.user_id]
+    );
+
+    if (dbResult.rowCount === 0) {
+      console.log("Couldn't find user to leave session");
+      return response.status(404).json({error: "User not found"});
+    }
+
+    response.json({succes: true});
+
+  } catch(err) {
+    response.status(500).json({ error: "Something went wrong - Couldn't leave Session"});
   }
 }
 
