@@ -52,7 +52,7 @@ async function checkUsername(username) {
 
 /* Funktion der kun bliver kaldt hvis brugernavnet er i vores database så sammenligner vi med inputtet i felterne 
 og om hvorhvidt det password der er blevet skrevet i inputfeltet passer med brugernavnets password*/
-
+ 
 /*Grunden til at det er en POST og ikke en get er fordi at en get viser dataen i url'en så brugerens password ville være i url'en hvilket ikke er sikkert
 Content type : application.json her fortæller vi at det er et json element vi sender igennem  og body : gør så vi kan hente den ved kaldet "json.body" så vi kan få dataen uden at have den i url'en*/
 async function checkPassword(username, password, user_id) {
