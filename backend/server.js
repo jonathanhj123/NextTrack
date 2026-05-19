@@ -191,8 +191,9 @@ async function getCurrentStatus(request, response) {
 
     const sessionId = request.params.session; //Da session ID er sendt i json, skal vi benytte body istedet for params
     const dbResult = await db.query(`
-      select currently_playing
-      from session_tracks
+      select t.title as SongTitle, t.artist_name as Artist, st.track_id as TrackId
+      from session_tracks st
+      join tracks t on t.track_id = st.track_id
       where session_id = $1
       and currently_playing = true
       `,
