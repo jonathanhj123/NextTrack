@@ -162,22 +162,50 @@ vi benytter "default values" i session_nt, da session_id er serial
     `,
       [sessionId, request.body.userId], //vi skal have userId fra frontend, da vi skal vide hvilken bruger der har lavet sessionen
     );
-    console.log("user session update success");
 
     //Nu har vi tilføjet session id til brugeren, så går vi videre:
     //Sidst men ikke mindst laver vi en tom kø/session tracks
     await db.query(
       `
-      insert into session_tracks (session_id, track_id, fallback_order)
-      select $1, track_id, row_number() over (order by track_id)
+      insert into session_tracks (session_id, track_id)
+      select $1, track_id
       from tracks
       order by random()
+      
     `,
       [sessionId],
     );
-    //todo forstå sql her
+    //randomiser tracks inde i session_tracks.
+
+    //vælg en random til at være currently_playing når vi starter en session.
+
+    await db.query(
+      `
+      update session_tracks
+      set currently_playing = true
+      where session_track_id = (
+      
+      select session_track_id
+      from session_tracks
+      where session_id = $1
+      order by random()
+      limit 1
+      )
+      `,
+      [sessionId], //Vi skal vælge en random track inde for X session_id til at være den der afspiller når vi starter en sang.
+    );
+    
+    await db.query(
+      `
+      update session_tracks
+      set current_started_at = CURRENT_TIMESTAMP
+      where currently_playing = true
+    `,
+    );
+
 
     response.json({ success: true, sessionId });
+    console.log("create complete")
   } catch (err) {
     console.log(err);
     response.status(500).json({ error: err.message });

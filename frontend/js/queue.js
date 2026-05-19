@@ -13,7 +13,7 @@ Should display count to the left of the button
 JS bool to check if user has upvoted once
 */
 
-document.getElementById("leaveButton1").addEventListener("click", () => {
+document.getElementById("leaveButton1").addEventListener("click", () => { //Når man forlader session, skal man smides ud til session html men beholde sit userid, så vi fortsatr kna arbejde med det
   const params = new URLSearchParams(window.location.search);
   const userId = params.get("user_id");
   window.location.href = `session.html?user_id=${userId}`;
@@ -21,70 +21,7 @@ document.getElementById("leaveButton1").addEventListener("click", () => {
 
 let hasUserVoted = false; //user har ikke voted i starten
 let votedButton = null; //reference to the button the user voted on
-let tracksQueue = []; //array for de 8 sange i queue
 
-document.addEventListener("DOMContentLoaded", async () => {
-  //DOM når alt HTML er loadet.
-  buildSongQueue(); //calls build of the queue
-});
-
-// async function that builds the list of songs
-
-async function buildSongQueue() {
-    try{
-        // In order to pause execution until the server responds, we use 'await'
-        const params = new URLSearchParams(window.location.search);
-        const session_id = params.get("session"); //få session id ud af query parameteren... Samme kode som lige overfor ved leave button.
-        const response = await fetch (`/api/tracks?session_id=${session_id}`); //samme funktion som progress har. vi laver altså en ny tracks side for hver session _id. 
-        const rows = await response.json();
-        console.log(response.status); //debug, tjek for respons. 200 er god
-        // Clearing the old data
-        tracksQueue.length = 0;
-
-        //Turning the Database data into UI data
-        for (let i = 0; i < 9; i++){ //Vi får 9 sange, da vi skal spille en, også have 8 i kø
-            let track = rows[i];
-            // Pushing the title and artist_name
-            tracksQueue.push({
-                title: track.title,
-                artist_name: track.artist_name,
-                tracklength: track.length,
-                votes: track.vote_count
-            });
-        }
-        // Renders the songs for the DOM
-        renderSongs();
-
-    // Resetting the votes to 0
-    resetCounters();
-
-    //play track
-    playTrack(0);
-  } catch (error) {
-    console.error("Voting Board has failed to load", error);
-  }
-}
-
-/*
-Denne funktions skal vi benytte for at tilføje nye sange når vi går igennem køen. Det sikrer at vi ikke bare spiller det samme igen og igen.
-*/
-
-async function addTrackToQueue() {
-    const params = new URLSearchParams(window.location.search); //benyt samme kode som i buildsongqueue
-    const session_id = params.get("session"); 
-    const response = await fetch (`/api/tracks?session_id=${session_id}`); 
-    const rows = await response.json(); //får respons i json
-
-  let track = rows[0];
-
-  tracksQueue.push({
-    //pusher til tracksQueue tabelen det nye data. Det er det vi bruger i renderSongs.
-    title: track.title,
-    artist_name: track.artist_name,
-    tracklength: track.length,
-    votes: 0,
-  });
-}
 
 // Renders the songs for the DOM
 async function renderSongs() {
