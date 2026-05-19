@@ -52,30 +52,6 @@ function onEachRequest(request, response, next) {
   next();
 } //logging
 
-//kendt kode fra dataforståelse
-server.get("/api/tracks", loadTracks); //dette giver os mulighed for at fetche noget fra /songs i frontend
-
-async function loadTracks(request, response) { //load songs til queue.js
-  const session_id = request.query.session_id //request session_id fra query parameteren
-  const dbResolve = await db.query(`
-    select tracks.title, tracks.length, tracks.artist_name, session_tracks.vote_count, session_tracks.current_started_at, session_tracks.currently_playing
-    from session_tracks
-    join tracks on session_tracks.track_id = tracks.track_id
-    where session_tracks.session_id = $1
-    order by random()
-    limit 9
-  `, [session_id],
-  );
-  const rows = dbResolve.rows;
-  console.log(dbResolve);
-  if (rows.length === 0) {
-    response.sendStatus(404);
-  } else {
-    response.json(rows);
-  }
-}
-
-//
 async function checkIfUserExists(request, response) {
   const username = request.params.username;
 
@@ -166,7 +142,7 @@ async function createSession(request, response) {
       default values
       returning session_id
     `);
-    /*
+/*
 Vi skal lave en del arbejde når vi laver en kø.
 Vi skal nemlig assigne brugeren der har lavet køen til sessionen
 og vi skal gøre session_tracks klar.
@@ -195,6 +171,7 @@ vi benytter "default values" i session_nt, da session_id er serial
       insert into session_tracks (session_id, track_id, fallback_order)
       select $1, track_id, row_number() over (order by track_id)
       from tracks
+      order by random()
     `,
       [sessionId],
     );
@@ -205,6 +182,26 @@ vi benytter "default values" i session_nt, da session_id er serial
     console.log(err);
     response.status(500).json({ error: err.message });
   }
+}
+
+server.get("/api/getCurrentStatus", getCurrentStatus);
+async function getCurrentStatus(request, response) {
+  console.log("kør getcurrent");
+  try {
+
+    const sessionId = request.params.session; //Da session ID er sendt i json, skal vi benytte body istedet for params
+    const dbResult = await db.query(`
+      select currently_playing
+      from session_tracks
+      where session_id = $1
+      and currently_playing = true
+      `,
+      [sessionId],
+      );
+      response.json(dbResult);
+    } catch(err) { 
+      console.log(err);
+    }
 }
 
 //
@@ -239,11 +236,15 @@ async function joinSession(request, response) {
       );
       response.json({ success: true }); //yay
       console.log("user session update success");
+      //getCurrentStatus();
     }
   } catch (err) {
     response.status(500).json({ error: "Something went wrong" }); //skriv fejl hvis en findes
   }
 }
+
+
+
 
 // function that makes the user leave the session
 async function leaveSession(request, response) {

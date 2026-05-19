@@ -66,7 +66,6 @@ await db.query(`
         session_id integer references session_nt(session_id),
         track_id integer references tracks(track_id),
         vote_count integer default 0,
-        fallback_order integer,
         currently_playing boolean default false,
         current_started_at timestamp
         )

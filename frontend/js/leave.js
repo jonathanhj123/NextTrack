@@ -4,7 +4,6 @@ async function leaveSession(){
     try {
 
         // "const userId" saves the found userId into a variable also called "userId"
-        const params = new URLSearchParams(window.location.search); 
         const userId = params.get("user_id");
 
         // if 'userId' couldn't be found it will return an error
