@@ -44,6 +44,7 @@ server.get("/api/getUserId/:username", getUserId);
 //
 server.post("/api/leaveSession", leaveSession);
 
+
 //
 function onEachRequest(request, response, next) {
   //
@@ -52,16 +53,21 @@ function onEachRequest(request, response, next) {
 } //logging
 
 //kendt kode fra dataforståelse
-server.get("/tracks", loadTracks); //dette giver os mulighed for at fetche noget fra /songs i frontend
+server.get("/api/tracks", loadTracks); //dette giver os mulighed for at fetche noget fra /songs i frontend
 
-async function loadTracks(request, response) {
-  //load songs til progress.js.
+async function loadTracks(request, response) { //load songs til queue.js
+  const session_id = request.query.session_id //request session_id fra query parameteren
   const dbResolve = await db.query(`
-    select tracks.length, tracks.title, tracks.artist_name
-    from tracks
+    select tracks.title, tracks.length, tracks.artist_name, session_tracks.vote_count, session_tracks.current_started_at, session_tracks.currently_playing
+    from session_tracks
+    join tracks on session_tracks.track_id = tracks.track_id
+    where session_tracks.session_id = $1
     order by random()
-  `);
+    limit 9
+  `, [session_id],
+  );
   const rows = dbResolve.rows;
+  console.log(dbResolve);
   if (rows.length === 0) {
     response.sendStatus(404);
   } else {
