@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const rows = await loadSession(); //Vi skal vente på at rows er defineret, så kalder vi det andet ved load af siden.
     updateArtistTitle(rows);
     updatePlayingTime(rows);
+    updateTrackListing(rows);
 });
 
 async function loadSession() {
@@ -57,7 +58,7 @@ function updatePlayingTime(rows) {
     */
 
         function updateProgress() { //funtkion til at opdatere progress
-            
+
         const realtime = Date.now() + serveroffset;
         const elapsed = realtime - starttime; //Vi går ud fra vi kan regne med den lokale brugers tid. Måske ikke det klogeste.
         const progress = elapsed / tracklength; //quick maffs
@@ -68,9 +69,28 @@ function updatePlayingTime(rows) {
             requestAnimationFrame(updateProgress);
     //console.log("progress:", progress); //debug, spammer konsol
         } else {
-            //do something
+            loadSession(); //når tracken er færdig vil serveren spille en ny sang, så den fanger vi bare.
+            updateTrackListing(); //vi får også en ny track listing.
             console.log("track done"); 
         }
     }
   updateProgress(); //starter funktionen
+}
+
+function updateTrackListing(rows) {
+  // Making "container" into the Element "leftBotoomRIghtDiv"
+  const container = document.getElementById("leftBottomRightDiv");
+
+    tracks = noget sql fetch
+
+    // goes through all specific table songs (song1, song2, ...) based on the loop index
+    const table = document.getElementById(`song${songNum}`);
+
+    const cells = table.querySelectorAll("td"); //vi har 2 celler i hver sang, en til titel og en til artist, så vi selecter begge celler
+
+    // Selects the two cells inside the table
+    if (cells.length >= 2) {
+      cells[0].textContent = track.title;
+      cells[1].textContent = track.artist_name;
+    }
 }
