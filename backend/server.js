@@ -232,8 +232,10 @@ async function getCurrentStatus(request, response) {
       const artist = row.artist;
       const starttime = row.starttime;
       const duration = row.duration;
+      const servertime = Date.now() + 7200000; //hvis man kører date.now i backend, får man backends tid. Så skal vi ikke stole på brugeren.
 
-      response.json({songtitle, artist, starttime, duration});
+      response.json({songtitle, artist, starttime, duration, servertime});
+
 
     } catch(err) { 
       console.log(err);

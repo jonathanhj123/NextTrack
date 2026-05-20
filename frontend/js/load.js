@@ -41,15 +41,18 @@ function updatePlayingTime(rows) {
     const tracklength = rows.duration * 1000;
 //vores duration er givet i sekunder i .csv, så vi skal lige gange med 1000 da JS kører i millisekunder.
 
-    const timestamp = rows.starttime //timestamp får vi fra sql
-    const starttime = new Date(timestamp).getTime() + 7200000; //7 mil plus for quickfix med 2 timers forskydning i DB. Ikke ligefrem skalerbart.
+    const timestamp = rows.starttime //timestamp vi får fra SQL, dvs. hvornår serveren siger sangen er startet.
+    const starttime = new Date(timestamp).getTime(); //Start time omdefineres til millisekunder, da rows giver os dato osv. med.
+
+    let serveroffset = 0
+    serveroffset = rows.servertime - Date.now(); // Vi tjekker forskel fra persons computer til serverens computer. Ikke 100% sikkert, da en user stadig under sangen kan ændre sin klokke
 
     console.log("times: start, length", starttime, tracklength) //debug
 
     
         function updateProgress() { //funtkion til at opdatere progress
-
-        const elapsed = Date.now() - starttime; //Vi går ud fra vi kan regne med den lokale brugers tid. Måske ikke det klogeste.
+console.log(rows.servertime);
+        const elapsed = rows.servertime - starttime; //Vi går ud fra vi kan regne med den lokale brugers tid. Måske ikke det klogeste.
         const progress = elapsed / tracklength; //quick maffs
         elem.style.width = (progress * 100) + "%"; //opdatere timebar med progress. da progress er i decimal, skal vi gange med 100 for at få procent.
 
