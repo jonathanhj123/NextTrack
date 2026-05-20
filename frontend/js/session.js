@@ -3,6 +3,7 @@ joinbutton.addEventListener("click", () => {
   joinRedirect();
 });
 
+// TODO Comments!
 async function joinRedirect() {
   try {
     const params = new URLSearchParams(window.location.search);
@@ -21,6 +22,7 @@ async function joinRedirect() {
   }
 }
 
+// TODO Comments!
 document.getElementById("solo").addEventListener("click",() =>{
   try {
     const params = new URLSearchParams(window.location.search);
