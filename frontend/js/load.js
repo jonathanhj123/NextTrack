@@ -4,15 +4,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     updatePlayingTime(rows);
     updateTrackListing(rows);
 });
+const params = new URLSearchParams(window.location.search); //Her læser vi session id fra url
+const sessionId = params.get("session");
+const queueid = document.getElementById("queueid"); //vi bruger det også til at skrive ID
+queueid.textContent = `'Q' ID: ${sessionId}`;
 
 async function loadSession() {
     try{
-    const params = new URLSearchParams(window.location.search);
-    const session_id = params.get("session"); //få session id ud af query parameteren... Samme kode som lige overfor ved leave button.
-    const response = await fetch (`/api/getCurrentStatus?session_id=${session_id}`); //samme funktion som progress har. vi laver altså en ny tracks side for hver session _id. 
+    const response = await fetch (`/api/getCurrentStatus?session_id=${sessionId}`); //sessionID er defineret overfor.
     const rows = await response.json(); //få responsens fra backend
     console.log(rows); //tjek, at brugeren får det rigtige
-
 
     return rows; //vi returner rows.
     /*
@@ -81,7 +82,7 @@ function updateTrackListing(rows) {
   // Making "container" into the Element "leftBotoomRIghtDiv"
   const container = document.getElementById("leftBottomRightDiv");
 
-    tracks = noget sql fetch
+    //tracks = noget sql fetch
 
     // goes through all specific table songs (song1, song2, ...) based on the loop index
     const table = document.getElementById(`song${songNum}`);
