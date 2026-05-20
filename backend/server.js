@@ -217,7 +217,7 @@ async function getCurrentStatus(request, response) {
   console.log("kør getcurrent");
   try {
 
-    const sessionId = request.params.session; //Da session ID er sendt i json, skal vi benytte body istedet for params
+    const sessionId = request.query.session_id; //Query paramateren er session_id.
     const dbResult = await db.query(`
       select t.title as SongTitle, t.artist_name as Artist, st.track_id as TrackId
       from session_tracks st
@@ -227,7 +227,12 @@ async function getCurrentStatus(request, response) {
       `,
       [sessionId],
       );
-      response.json(dbResult);
+      const row = dbResult.rows[0]; //definere svaret i rows
+      const songtitle = row.songtitle; //definere de forskellige svar
+      const artist = row.artist;
+
+      response.json({songtitle, artist});
+
     } catch(err) { 
       console.log(err);
     }
