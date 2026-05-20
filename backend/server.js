@@ -247,7 +247,7 @@ async function leaveSession(request, response) {
       set session_id = null
       where user_id = $1
     `,
-    [request.body.user_id]
+    [request.body.user_id],
     );
 
     if (dbResult.rowCount === 0) {

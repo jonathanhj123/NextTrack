@@ -10,7 +10,7 @@ console.log(`Recreating database on ${timestamp}...`);
 
 // Drop alle gamle tables ved opstart
 await db.query("drop schema public cascade");
-await db.query("create schema public"); //JEG ELSKER SCHEMA!! FUCK JER
+await db.query("create schema public"); //JEG ELSKER SCHEMA!!
 //await db.query("drop table if exists users");
 //await db.query("drop table if exists users");
 //await db.query("drop table if exists session_tracks");
