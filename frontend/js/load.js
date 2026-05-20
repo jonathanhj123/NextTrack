@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", async () => {
     const rows = await loadSession(); //Vi skal vente på at rows er defineret, så kalder vi det andet ved load af siden.
     updateArtistTitle(rows);
+    updatePlayingTime(rows);
 });
 
 async function loadSession() {
@@ -29,6 +30,37 @@ function updateArtistTitle(rows) {
     title.textContent = rows.songtitle;
 
     const artist = document.getElementById("artistname")
-    title.textContent = rows.artist;
+    artist.textContent = rows.artist;
     
+}
+
+function updatePlayingTime(rows) {
+    const elem = document.getElementById("timeBar");
+    elem.style.width = "0%"; //Vi starter fra ny - så vi skal reset timebar
+
+    const tracklength = rows.duration * 1000;
+//vores duration er givet i sekunder i .csv, så vi skal lige gange med 1000 da JS kører i millisekunder.
+
+    const timestamp = rows.starttime //timestamp får vi fra sql
+    const starttime = new Date(timestamp).getTime() + 7200000; //7 mil plus for quickfix med 2 timers forskydning i DB. Ikke ligefrem skalerbart.
+
+    console.log("times: start, length", starttime, tracklength) //debug
+
+    
+        function updateProgress() { //funtkion til at opdatere progress
+
+        const elapsed = Date.now() - starttime; //Vi går ud fra vi kan regne med den lokale brugers tid. Måske ikke det klogeste.
+        const progress = elapsed / tracklength; //quick maffs
+        elem.style.width = (progress * 100) + "%"; //opdatere timebar med progress. da progress er i decimal, skal vi gange med 100 for at få procent.
+
+        if (progress < 1) {
+    //Hvis sangen ikke er færdig opdatere vi progress.
+            requestAnimationFrame(updateProgress);
+    //console.log("progress:", progress); //debug, spammer konsol
+        } else {
+            //do something
+            console.log("track done"); 
+        }
+    }
+  updateProgress(); //starter funktionen
 }

@@ -219,7 +219,7 @@ async function getCurrentStatus(request, response) {
 
     const sessionId = request.query.session_id; //Query paramateren er session_id.
     const dbResult = await db.query(`
-      select t.title as SongTitle, t.artist_name as Artist, st.track_id as TrackId
+      select t.title as SongTitle, t.artist_name as Artist, st.track_id as TrackId, st.current_started_at as starttime, t.length as duration
       from session_tracks st
       join tracks t on t.track_id = st.track_id
       where session_id = $1
@@ -230,8 +230,10 @@ async function getCurrentStatus(request, response) {
       const row = dbResult.rows[0]; //definere svaret i rows
       const songtitle = row.songtitle; //definere de forskellige svar
       const artist = row.artist;
+      const starttime = row.starttime;
+      const duration = row.duration;
 
-      response.json({songtitle, artist});
+      response.json({songtitle, artist, starttime, duration});
 
     } catch(err) { 
       console.log(err);
