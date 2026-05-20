@@ -42,17 +42,24 @@ function updatePlayingTime(rows) {
 //vores duration er givet i sekunder i .csv, så vi skal lige gange med 1000 da JS kører i millisekunder.
 
     const timestamp = rows.starttime //timestamp vi får fra SQL, dvs. hvornår serveren siger sangen er startet.
-    const starttime = new Date(timestamp).getTime(); //Start time omdefineres til millisekunder, da rows giver os dato osv. med.
+    const starttime = new Date(timestamp).getTime() + 7200000; //Start time omdefineres til millisekunder, da rows giver os dato osv. med.
+    //Her er quickfix for at fixe UTC tidszone. Mere forklaret i server.js.
 
-    let serveroffset = 0
-    serveroffset = rows.servertime - Date.now(); // Vi tjekker forskel fra persons computer til serverens computer. Ikke 100% sikkert, da en user stadig under sangen kan ændre sin klokke
+    let serveroffset = 0 //offset definere
+    serveroffset = rows.servertime - Date.now(); // Vi tjekker forskel fra persons computer til serverens computer. Ikke 100% sikkert, da en user stadig under sangen kan ændre sin klokke(!)
 
-    console.log("times: start, length", starttime, tracklength) //debug
+    /* Eksempel:
+    Min computer siger klokken er 13:26, men serveren siger 13:25.
+    Så vil vi få et offset der hedder -1 minut. (60000ms)
+    Senere ændrer vi så at vi siger så at computeren skal se tiden som hvad den tror tiden er, plus serveroffset.
+    Altså:
+    13:25 + (-1)
+    */
 
-    
         function updateProgress() { //funtkion til at opdatere progress
-console.log(rows.servertime);
-        const elapsed = rows.servertime - starttime; //Vi går ud fra vi kan regne med den lokale brugers tid. Måske ikke det klogeste.
+            
+        const realtime = Date.now() + serveroffset;
+        const elapsed = realtime - starttime; //Vi går ud fra vi kan regne med den lokale brugers tid. Måske ikke det klogeste.
         const progress = elapsed / tracklength; //quick maffs
         elem.style.width = (progress * 100) + "%"; //opdatere timebar med progress. da progress er i decimal, skal vi gange med 100 for at få procent.
 
