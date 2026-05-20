@@ -230,9 +230,10 @@ async function getCurrentStatus(request, response) {
       const row = dbResult.rows[0]; //definere svaret i rows
       const songtitle = row.songtitle; //definere de forskellige svar
       const artist = row.artist;
-      const starttime = row.starttime;
+      const starttime = row.starttime; //Når vi fetcher starttime fra SQL er det i UTC. Med lidt foresight havde man valgt en EU server og skrevet timestamp ind med tidszone (timestamptz i sql)
+      //Det fixer vi i frontend. Som heller ikke er optimalt.
       const duration = row.duration;
-      const servertime = Date.now() + 7200000; //hvis man kører date.now i backend, får man backends tid. Så skal vi ikke stole på brugeren.
+      const servertime = Date.now(); 
 
       response.json({songtitle, artist, starttime, duration, servertime});
 
