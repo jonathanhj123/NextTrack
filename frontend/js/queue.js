@@ -13,42 +13,11 @@ Should display count to the left of the button
 JS bool to check if user has upvoted once
 */
 
-document.getElementById("leaveButton1").addEventListener("click", () => { //Når man forlader session, skal man smides ud til session html men beholde sit userid, så vi fortsatr kna arbejde med det
-  const params = new URLSearchParams(window.location.search);
-  const userId = params.get("user_id");
-  window.location.href = `session.html?user_id=${userId}`;
-});
+
 
 let hasUserVoted = false; //user har ikke voted i starten
 let votedButton = null; //reference to the button the user voted on
 
-
-// Renders the songs for the DOM
-async function renderSongs() {
-  // Making "container" into the Element "leftBotoomRIghtDiv"
-  const container = document.getElementById("leftBottomRightDiv");
-
-  // Loops through all 8 songs
-  for (let i = 0; i < 8; i++) {
-    //vi skal have 8 sange i køen, så vi loop igennem 8 gange
-    // "track" representates the selected item from the "tracksQueue" list
-    let track = tracksQueue[i + 1]; //vi starter fra i+1, da i=0 er den sang der spiller, og vi skal have de næste 8 sange i køen. Altså sangene i index 1-8.
-
-    // With each loop the next ID gets calculated (song1, song2, song3, ...)
-    const songNum = i + 1;
-
-    // goes through all specific table songs (song1, song2, ...) based on the loop index
-    const table = document.getElementById(`song${songNum}`);
-
-    const cells = table.querySelectorAll("td"); //vi har 2 celler i hver sang, en til titel og en til artist, så vi selecter begge celler
-
-    // Selects the two cells inside the table
-    if (cells.length >= 2) {
-      cells[0].textContent = track.title;
-      cells[1].textContent = track.artist_name;
-    }
-  }
-}
 
 // Resets the votes to 0
 function resetCounters() {
