@@ -11,7 +11,6 @@ const tncCheckbox = document.getElementById("tnc");
 const form = document.getElementById("form");
 
 //Diverse fejlbeskeder:
-
 function showPopup(message) {
   if (document.querySelector(".error-popup")) return;
 

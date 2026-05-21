@@ -63,12 +63,14 @@ async function buildSongQueue() {
 }
 
 /*
-Denne funktions skal vi benytte for at tilføje nye sange når vi går igennem køen. Det sikrer at vi ikke bare spiller det samme igen og igen.
+Denne funktions skal vi benytte for at tilføje nye sange når vi går igennem køen. 
+Det sikrer at vi ikke bare spiller det samme igen og igen.
 */
-
 async function addTrackToQueue() {
-  const response = await fetch("/tracks"); //vi fetcher fra tracks, som allerede er random
-  const rows = await response.json(); //får respons i json
+  //vi fetcher fra tracks, som allerede er random
+  const response = await fetch("/tracks");
+  //får respons i json
+  const rows = await response.json();
 
   let track = rows[0];
 
@@ -121,16 +123,35 @@ function resetCounters() {
 
 // Turns the vote Arrow into red and counts one up, if clicked
 function redArrowIfClicked(buttonElement, counterId) {
+
   // If the user clicks the same red button again, deselect it
   if (hasUserVoted && buttonElement === votedButton) {
+
+    // assigns a variable for the counterId (from the HTML)
     const counterElem = document.getElementById(counterId);
+
+    // assigns a variable for counterId 
+    // (it's +1 because our first track is [1] in our array, while the ID's in the HTML are 0-indexed)
     let pointerId = parseInt(counterId) + 1;
+
+    // Updates the vote with -1
     tracksQueue[pointerId].votes = tracksQueue[pointerId].votes - 1;
+
+    // Change the textcontent to the new counts of votes
     counterElem.textContent = tracksQueue[pointerId].votes;
+
+    // Change the backgroundcolor back to the original color
     buttonElement.style.backgroundColor = "";
+
+    // Change the color back to the original color
     buttonElement.style.color = "";
+
+    // Changes the boolean "hasUservoted" back to false
     hasUserVoted = false;
+
+    // Now there isn't a votedButton anymore
     votedButton = null;
+
     return;
   }
 
