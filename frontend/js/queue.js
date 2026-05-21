@@ -251,27 +251,27 @@ function updateProgress(now) {
 
 async function nextTrack() {
   console.log("next called");
-  //shift fjerner den første sang fra array (pop), da det er den der afspiller
-  tracksQueue.shift;
-  //så sorterer vi efter votes i arrayet
-  tracksQueue.sort((a, b) => b.votes - a.votes);
-  console.log(tracksQueue);
-  playTrack(0); //spiller højst rangeret sang
 
-  /*
-    For loops til at fjerne alt i array og tilføje helt nye, så vi får nye sange hver gang.
-    */
-  tracksQueue = [];
-  for (let i = 0; i <= 8; i++) {
-    await addTrackToQueue(i);
+  // Fjern den sang der spiller (index 0)
+  tracksQueue.shift();
+
+  // Sortér de resterende sange efter stemmer — vinderen havner i index 0
+  tracksQueue.sort((a, b) => b.votes - a.votes);
+
+  // Gem vinderen og nulstil dens stemmer
+  const winner = tracksQueue[0];
+  winner.votes = 0;
+
+  // Behold kun vinderen og fyld de resterende 8 pladser med helt nye tilfældige sange
+  tracksQueue = [winner];
+  for (let i = 0; i < 8; i++) {
+    await addTrackToQueue();
   }
 
-  //reset de forskellige ting i UI.
+  // Nulstil UI og spil vinderen
   ResetButtons();
   resetCounters();
-  //console.log(tracksQueue); //debug
-
-  //starter forfra i køen, da vi har fjernet den første sang, så den næste sang nu er i index 0.
+  playTrack(0);
 }
 
 function ResetButtons() {
