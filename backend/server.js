@@ -11,6 +11,9 @@ import { pool } from "../db/connect.js";
 // Imports the request file from express
 import req from "express/lib/request.js";
 
+import { checkSessions, advanceSession } from "./CA.js"
+setInterval(checkSessions, 300); //Importere check/advance sessionen ved startup. Mindre clutter!
+
 // the pool() function from connect.js assigns it to the variable "db"
 const db = pool();
 // The Server uses port 3010
@@ -46,8 +49,10 @@ server.post("/api/leaveSession", leaveSession);
 
 //
 function onEachRequest(request, response, next) {
-  //
+  if(!request.url.includes("getTrackListing"))
+  {
   console.log(new Date(), request.method, request.url);
+  }
   next();
 } //logging
 
@@ -133,20 +138,49 @@ async function registerUser(request, response) {
   }
 }
 
+server.post("/api/addVote", addVote);
 async function addVote(request, response) {
   try {
     const { user_id, session_id, track_id } = request.body;
 
-    await db.query(
-      `INSERT INTO votes (user_id, session_id, track_id)
-       VALUES ($1, $2, $3)`,
+    await db.query(`
+      insert into votes (user_id, session_id, track_id)
+      values ($1, $2, $3)
+      `,
       [user_id, session_id, track_id],
     );
 
-    response.json({ success: true });
+    response.json({ success: true }); //det gik godt
+    console.log(user_id,"voted for",track_id,"in",session_id); //debug
   } catch (err) {
-    response.status(500).json({ error: err.message });
+    response.status(500).json({ error: err.message }); //debug
   }
+}
+
+server.delete("/api/removeVote", removeVote); //fjern vote funktion
+async function removeVote(request, response) {
+
+    try {
+        const {user_id,session_id,track_id} = request.body; //"body" er når vi får det fra requesten fra frontend. dvs. vores query paramters mest af alt.
+
+        await db.query(`
+            DELETE FROM votes
+            WHERE user_id = $1
+            AND session_id = $2
+            AND track_id = $3
+        `, [
+            user_id,
+            session_id,
+            track_id
+        ]);
+
+        console.log(user_id,"removed vote for",track_id,"in",session_id); //debug
+        response.json({success: true});
+
+    } catch(err) {
+        console.log("error during removeVote:",err);
+        response.status(500)
+    }
 }
 
 //
@@ -197,26 +231,22 @@ vi benytter "default values" i session_nt, da session_id er serial
     await db.query(
       `
       update session_tracks
-      set currently_playing = true
-      where session_track_id = (
-      
-      select session_track_id
-      from session_tracks
-      where session_id = $1
-      order by random()
-      limit 1
-      )
+        set currently_playing = true,
+        current_started_at = CURRENT_TIMESTAMP
+
+      where (session_id, track_id) = (
+        select
+        session_id, track_id
+        
+        from session_tracks
+        where session_id = $1
+        order by random()
+        limit 1
+        )
       `,
       [sessionId], //Vi skal vælge en random track inde for X session_id til at være den der afspiller når vi starter en sang.
     );
 
-    await db.query(
-      `
-      update session_tracks
-      set current_started_at = CURRENT_TIMESTAMP
-      where currently_playing = true
-    `,
-    );
 
     response.json({ success: true, sessionId });
     console.log("create complete");
@@ -226,16 +256,9 @@ vi benytter "default values" i session_nt, da session_id er serial
   }
 }
 
-server.get("/api/updateSession", updateSession);
-async function updateSession(request, response) {
-  
 
-
-}
-
-server.get("/api/getCurrentStatus", getCurrentStatus);
+server.get("/api/getCurrentStatus", getCurrentStatus); //Her får vi status (noget af det første vi går) når vi loader.
 async function getCurrentStatus(request, response) {
-  console.log("kør getcurrent");
   try {
     const sessionId = request.query.session_id; //Query paramateren er session_id.
     const dbResult = await db.query(`
@@ -245,13 +268,12 @@ async function getCurrentStatus(request, response) {
       where session_id = $1
       and currently_playing = true
       `,
-      [sessionId],
+      [sessionId], //Hvilken sang afspiller? Og vis den. Send også en masse ting der er relevante hertil nedeunder.
     );
     const row = dbResult.rows[0]; //definere svaret i rows
     const songtitle = row.songtitle; //definere de forskellige svar
     const artist = row.artist;
-    const starttime = row.starttime; //Når vi fetcher starttime fra SQL er det i UTC. Med lidt foresight havde man valgt en EU server og skrevet timestamp ind med tidszone (timestamptz i sql)
-    //Det fixer vi i frontend. Som heller ikke er optimalt.
+    const starttime = row.starttime; 
     const duration = row.duration;
     const servertime = Date.now();
 
@@ -263,16 +285,20 @@ async function getCurrentStatus(request, response) {
 
 server.get("/api/getTrackListing", getTrackListing);
 async function getTrackListing(request, response) { //Funktion til at samle nuværende sange i session_tracks for X session_id til queue listing. Næstne samme kode som overfor
-  console.log("get listing"); //debug
+  //spammer...console.log("get listing"); //debug
   
   try {
     const sessionId = request.query.session_id;
     const dbResult = await db.query(`
-      select t.title as SongTitle, t.artist_name as Artist, st.track_id as TrackId
-      from session_tracks st
-      join tracks t on t.track_id = st.track_id
+      select t.title as SongTitle, t.artist_name as Artist, st.track_id as TrackId, count(v.user_id) as votes
+        from session_tracks st
+        left join votes v using (session_id, track_id)
+        join tracks t on t.track_id = st.track_id
       where session_id = $1
-      and currently_playing = false
+        and currently_playing = false
+
+      group by
+        t.title, t.artist_name, st.track_id
       `,
       [sessionId],
     );
@@ -351,4 +377,44 @@ async function leaveSession(request, response) {
 
 function onServerReady() {
   console.log("Populii server running on port", port);
+}
+
+
+
+//tak til chat for debug
+server.post("/api/debugSkip", debugSkip);
+async function debugSkip(
+    request,
+    response
+) {
+
+    try {
+
+        const sessionId =
+            request.body.session_id;
+
+        await advanceSession(
+            sessionId
+        );
+
+        response.json({
+            success: true
+        });
+
+        console.log(
+            "debug skipped:",
+            sessionId
+        );
+
+    } catch(err) {
+
+        console.log(
+            "debug skip error:",
+            err
+        );
+
+        response.status(500).json({
+            error: err.message
+        });
+    }
 }

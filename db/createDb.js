@@ -60,15 +60,17 @@ await db.query(`
 // Lav session_tracks table (hvor vores kø ligger)
 await db.query(`
     create table session_tracks (
-        session_track_id serial primary key,
         session_id integer references session_nt(session_id),
         track_id integer references tracks(track_id),
         currently_playing boolean default false,
-        current_started_at timestamp
+        current_started_at timestamptz,
+        primary key (session_id, track_id)
         )
     `);
 /*
 Default 0 = starter ved nul. Dvs i stedet for vi får et NULL felt (tomt) vil der stå 0.
+
+Den sidste del med primary key (session_id, track_id) gør at disse to altid skal være unikke. Det fjerner duplikanter i queue.
 */
 
 //votes
@@ -77,7 +79,9 @@ await db.query(`
         vote_id serial primary key,
         user_id integer references users(user_id),
         session_id integer references session_nt(session_id),
-        session_track_id integer references session_tracks(session_track_id) on delete cascade
+        track_id integer,
+        foreign key (session_id, track_id) references session_tracks(session_id, track_id) on delete cascade,
+        unique(user_id, session_id)
     )
 `);
 
