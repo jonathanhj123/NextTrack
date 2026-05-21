@@ -143,6 +143,9 @@ hvor den tager det f√∏rste argument som tiden det skal tage, derefter hvilken m√
   display: flex;
   gap: 20px;
   margin-top: 5%;
+}
+
+#leaveButton1 {
   cursor: pointer;
 }
 
