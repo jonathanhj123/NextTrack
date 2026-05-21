@@ -44,7 +44,6 @@ server.get("/api/getUserId/:username", getUserId);
 //
 server.post("/api/leaveSession", leaveSession);
 
-
 //
 function onEachRequest(request, response, next) {
   //
@@ -134,6 +133,22 @@ async function registerUser(request, response) {
   }
 }
 
+async function addVote(request, response) {
+  try {
+    const { user_id, session_id, track_id } = request.body;
+
+    await db.query(
+      `INSERT INTO votes (user_id, session_id, track_id)
+       VALUES ($1, $2, $3)`,
+      [user_id, session_id, track_id],
+    );
+
+    response.json({ success: true });
+  } catch (err) {
+    response.status(500).json({ error: err.message });
+  }
+}
+
 //
 async function createSession(request, response) {
   try {
@@ -142,7 +157,7 @@ async function createSession(request, response) {
       default values
       returning session_id
     `);
-/*
+    /*
 Vi skal lave en del arbejde når vi laver en kø.
 Vi skal nemlig assigne brugeren der har lavet køen til sessionen
 og vi skal gøre session_tracks klar.
@@ -171,7 +186,7 @@ vi benytter "default values" i session_nt, da session_id er serial
       select $1, track_id
       from tracks
       order by random()
-      
+      limit 9
     `,
       [sessionId],
     );
@@ -194,7 +209,7 @@ vi benytter "default values" i session_nt, da session_id er serial
       `,
       [sessionId], //Vi skal vælge en random track inde for X session_id til at være den der afspiller når vi starter en sang.
     );
-    
+
     await db.query(
       `
       update session_tracks
@@ -203,20 +218,25 @@ vi benytter "default values" i session_nt, da session_id er serial
     `,
     );
 
-
     response.json({ success: true, sessionId });
-    console.log("create complete")
+    console.log("create complete");
   } catch (err) {
     console.log(err);
     response.status(500).json({ error: err.message });
   }
 }
 
+server.get("/api/updateSession", updateSession);
+async function updateSession(request, response) {
+  
+
+
+}
+
 server.get("/api/getCurrentStatus", getCurrentStatus);
 async function getCurrentStatus(request, response) {
   console.log("kør getcurrent");
   try {
-
     const sessionId = request.query.session_id; //Query paramateren er session_id.
     const dbResult = await db.query(`
       select t.title as SongTitle, t.artist_name as Artist, st.track_id as TrackId, st.current_started_at as starttime, t.length as duration
@@ -226,22 +246,44 @@ async function getCurrentStatus(request, response) {
       and currently_playing = true
       `,
       [sessionId],
-      );
-      const row = dbResult.rows[0]; //definere svaret i rows
-      const songtitle = row.songtitle; //definere de forskellige svar
-      const artist = row.artist;
-      const starttime = row.starttime; //Når vi fetcher starttime fra SQL er det i UTC. Med lidt foresight havde man valgt en EU server og skrevet timestamp ind med tidszone (timestamptz i sql)
-      //Det fixer vi i frontend. Som heller ikke er optimalt.
-      const duration = row.duration;
-      const servertime = Date.now(); 
+    );
+    const row = dbResult.rows[0]; //definere svaret i rows
+    const songtitle = row.songtitle; //definere de forskellige svar
+    const artist = row.artist;
+    const starttime = row.starttime; //Når vi fetcher starttime fra SQL er det i UTC. Med lidt foresight havde man valgt en EU server og skrevet timestamp ind med tidszone (timestamptz i sql)
+    //Det fixer vi i frontend. Som heller ikke er optimalt.
+    const duration = row.duration;
+    const servertime = Date.now();
 
-      response.json({songtitle, artist, starttime, duration, servertime});
-
-
-    } catch(err) { 
-      console.log(err);
-    }
+    response.json({ songtitle, artist, starttime, duration, servertime });
+  } catch (err) {
+    console.log("error during getting status:", err);
+  }
 }
+
+server.get("/api/getTrackListing", getTrackListing);
+async function getTrackListing(request, response) { //Funktion til at samle nuværende sange i session_tracks for X session_id til queue listing. Næstne samme kode som overfor
+  console.log("get listing"); //debug
+  
+  try {
+    const sessionId = request.query.session_id;
+    const dbResult = await db.query(`
+      select t.title as SongTitle, t.artist_name as Artist, st.track_id as TrackId
+      from session_tracks st
+      join tracks t on t.track_id = st.track_id
+      where session_id = $1
+      and currently_playing = false
+      `,
+      [sessionId],
+    );
+
+    response.json(dbResult.rows);
+
+  } catch (err) {
+    console.log("error during getting listing", err);
+  }
+}
+
 
 //
 async function joinSession(request, response) {
@@ -282,29 +324,28 @@ async function joinSession(request, response) {
   }
 }
 
-
-
-
 // function that makes the user leave the session
 async function leaveSession(request, response) {
   try {
-    const dbResult = await db.query(`
+    const dbResult = await db.query(
+      `
       update users
       set session_id = null
       where user_id = $1
     `,
-    [request.body.user_id]
+      [request.body.user_id],
     );
 
     if (dbResult.rowCount === 0) {
       console.log("Couldn't find user to leave session");
-      return response.status(404).json({error: "User not found"});
+      return response.status(404).json({ error: "User not found" });
     }
 
-    response.json({succes: true});
-
-  } catch(err) {
-    response.status(500).json({ error: "Something went wrong - Couldn't leave Session"});
+    response.json({ succes: true });
+  } catch (err) {
+    response
+      .status(500)
+      .json({ error: "Something went wrong - Couldn't leave Session" });
   }
 }
 

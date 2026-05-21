@@ -38,8 +38,6 @@ await db.query(`
     )
 `);
 
-
-
 //VI laver id, email unik. Det er vigtigt vi arbejder med den information i server.js / register.js.
 
 // Lav tracks table
@@ -65,7 +63,6 @@ await db.query(`
         session_track_id serial primary key,
         session_id integer references session_nt(session_id),
         track_id integer references tracks(track_id),
-        vote_count integer default 0,
         currently_playing boolean default false,
         current_started_at timestamp
         )
@@ -79,13 +76,12 @@ await db.query(`
     create table votes (
         vote_id serial primary key,
         user_id integer references users(user_id),
-        session_track_id integer references session_tracks(session_track_id)
+        session_id integer references session_nt(session_id),
+        session_track_id integer references session_tracks(session_track_id) on delete cascade
     )
 `);
 
-
 //Nu skal vi importere data
-
 
 //tracks
 await upload(

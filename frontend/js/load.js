@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", async () => {
     const rows = await loadSession(); //Vi skal vente på at rows er defineret, så kalder vi det andet ved load af siden.
+    await updateTrackListing();
     updateArtistTitle(rows);
     updatePlayingTime(rows);
-    updateTrackListing(rows);
 });
 const params = new URLSearchParams(window.location.search); //Her læser vi session id fra url
 const sessionId = params.get("session");
@@ -70,28 +70,34 @@ function updatePlayingTime(rows) {
             requestAnimationFrame(updateProgress);
     //console.log("progress:", progress); //debug, spammer konsol
         } else {
-            loadSession(); //når tracken er færdig vil serveren spille en ny sang, så den fanger vi bare.
-            updateTrackListing(); //vi får også en ny track listing.
+            setTimeout(loadSession(), 200); //når tracken er færdig vil serveren spille en ny sang, så den fanger vi bare.
+            setTimeout(updateTrackListing(), 200); //vi får også en ny track listing.
+            //ekstrem hacky måde at sikre brugeren ikke sprøger for tidligt. aldrig gør det her i virkeligheden
             console.log("track done"); 
         }
     }
   updateProgress(); //starter funktionen
 }
 
-function updateTrackListing(rows) {
-  // Making "container" into the Element "leftBotoomRIghtDiv"
-  const container = document.getElementById("leftBottomRightDiv");
+async function updateTrackListing() {
+    try {
+    const response = await fetch (`/api/getTrackListing?session_id=${sessionId}`); //sessionID er defineret overfor.
+    const rows = await response.json(); //få responsens fra backend
+    console.log("for", sessionId,"songs in listing is:", rows); //tjek, at brugeren får det rigtige
 
-    //tracks = noget sql fetch
+        for (let songNum = 0; songNum < rows.length; songNum++) {
+            const row = rows[songNum];
+            const container = document.getElementById("leftBottomRightDiv");
+            const table = document.getElementById(`song${songNum}`);
+            const cells = table.querySelectorAll("td"); //vi har 2 celler i hver sang, en til titel og en til artist, så vi selecter begge celler
 
-    // goes through all specific table songs (song1, song2, ...) based on the loop index
-    const table = document.getElementById(`song${songNum}`);
-
-    const cells = table.querySelectorAll("td"); //vi har 2 celler i hver sang, en til titel og en til artist, så vi selecter begge celler
-
-    // Selects the two cells inside the table
-    if (cells.length >= 2) {
-      cells[0].textContent = track.title;
-      cells[1].textContent = track.artist_name;
+        // Selects the two cells inside the table
+            if (cells.length >= 2) {
+            cells[0].textContent = row.songtitle;
+            cells[1].textContent = row.artist;
+            }
+        }
+    } catch(err) {
+        console.log("error during updating listing frontend", err);
     }
 }
