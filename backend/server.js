@@ -186,7 +186,7 @@ vi benytter "default values" i session_nt, da session_id er serial
       select $1, track_id
       from tracks
       order by random()
-      
+      limit 9
     `,
       [sessionId],
     );
@@ -226,6 +226,13 @@ vi benytter "default values" i session_nt, da session_id er serial
   }
 }
 
+server.get("/api/updateSession", updateSession);
+async function updateSession(request, response) {
+  
+
+
+}
+
 server.get("/api/getCurrentStatus", getCurrentStatus);
 async function getCurrentStatus(request, response) {
   console.log("kør getcurrent");
@@ -251,9 +258,33 @@ async function getCurrentStatus(request, response) {
 
     response.json({ songtitle, artist, starttime, duration, servertime });
   } catch (err) {
-    console.log(err);
+    console.log("error during getting status:", err);
   }
 }
+
+server.get("/api/getTrackListing", getTrackListing);
+async function getTrackListing(request, response) { //Funktion til at samle nuværende sange i session_tracks for X session_id til queue listing. Næstne samme kode som overfor
+  console.log("get listing"); //debug
+  
+  try {
+    const sessionId = request.query.session_id;
+    const dbResult = await db.query(`
+      select t.title as SongTitle, t.artist_name as Artist, st.track_id as TrackId
+      from session_tracks st
+      join tracks t on t.track_id = st.track_id
+      where session_id = $1
+      and currently_playing = false
+      `,
+      [sessionId],
+    );
+
+    response.json(dbResult.rows);
+
+  } catch (err) {
+    console.log("error during getting listing", err);
+  }
+}
+
 
 //
 async function joinSession(request, response) {
