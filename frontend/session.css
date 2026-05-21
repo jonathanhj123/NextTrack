@@ -15,8 +15,8 @@ main {
 }
 
 #back{
-  font-size: 50px;
-  padding: 0px 0px 10px 0px;
+  font-size: 25px;
+  padding: 10px 0px 10px 0px;
   margin: 10px 10px 10px 10px;
   background: linear-gradient(to right, black 50%, white 50%);
   background-size: 200% 100%;
