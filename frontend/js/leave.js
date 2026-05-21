@@ -1,10 +1,15 @@
+document.getElementById("leaveButton1").addEventListener("click", () => { //Når man forlader session, skal man smides ud til session html men beholde sit userid, så vi fortsatr kna arbejde med det
+  const params = new URLSearchParams(window.location.search);
+  const userId = params.get("user_id");
+  window.location.href = `session.html?user_id=${userId}`;
+});
+
 // Makes it possible to leave the session
 async function leaveSession(){
     
     try {
-
+            const params = new URLSearchParams(window.location.search);
         // "const userId" saves the found userId into a variable also called "userId"
-        const params = new URLSearchParams(window.location.search); 
         const userId = params.get("user_id");
 
         // if 'userId' couldn't be found it will return an error

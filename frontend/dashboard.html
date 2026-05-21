@@ -4,12 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Queue</title>
-    <script src="/js/queue.js" defer></script>
     <script src="/js/coverArt.js" defer></script>
-    <script src="/js/leave.js"></script>
+    <script src="/js/load.js" defer></script>
+    <script src="/js/leave.js" defer></script>
+    <script src="/js/vote.js" defer></script>
+    <script src="/js/debug.js" defer></script>
     <link rel="stylesheet" href="dashboard.css" />
     <link rel="stylesheet" href="universal.css" />
-    <link rel="icon" type="image/x-icon" href="/NextTrack/images/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
   </head>
   <body>
     <div id="topDiv">
@@ -46,7 +48,7 @@
       </div>
       <div id="bottomRightDiv">
         <div id="leftBottomRightDiv">
-          <table class="uneven" id="song1">
+          <table class="uneven" id="song0">
             <tr>
               <td class="songClass"></td>
             </tr>
@@ -54,7 +56,7 @@
               <td class="artistClass"></td>
             </tr>
           </table>
-          <table class="even" id="song2">
+          <table class="even" id="song1">
             <tr>
               <td class="songClass"></td>
             </tr>
@@ -62,7 +64,7 @@
               <td class="artistClass"></td>
             </tr>
           </table>
-          <table class="uneven" id="song3">
+          <table class="uneven" id="song2">
             <tr>
               <td class="songClass"></td>
             </tr>
@@ -70,7 +72,7 @@
               <td class="artistClass"></td>
             </tr>
           </table>
-          <table class="even" id="song4">
+          <table class="even" id="song3">
             <tr>
               <td class="songClass"></td>
             </tr>
@@ -78,7 +80,7 @@
               <td class="artistClass"></td>
             </tr>
           </table>
-          <table class="uneven" id="song5">
+          <table class="uneven" id="song4">
             <tr>
               <td class="songClass"></td>
             </tr>
@@ -86,7 +88,7 @@
               <td class="artistClass"></td>
             </tr>
           </table>
-          <table class="even" id="song6">
+          <table class="even" id="song5">
             <tr>
               <td class="songClass"></td>
             </tr>
@@ -94,7 +96,7 @@
               <td class="artistClass"></td>
             </tr>
           </table>
-          <table class="uneven" id="song7">
+          <table class="uneven" id="song6">
             <tr>
               <td class="songClass"></td>
             </tr>
@@ -102,7 +104,7 @@
               <td class="artistClass"></td>
             </tr>
           </table>
-          <table class="even" id="song8">
+          <table class="even" id="song7">
             <tr>
               <td class="songClass"></td>
             </tr>
@@ -123,21 +125,21 @@
             <p id="7">0</p>
           </div>
           <div id="buttons">
-            <button id="button0" class="voteButton" onclick="redArrowIfClicked(this, '0')">
+            <button id="button0" class="voteButton">
               &#8593;</button
-            ><button id="button1" class="voteButton" onclick="redArrowIfClicked(this, '1')">
+            ><button id="button1" class="voteButton">
               &#8593;</button
-            ><button id="button2" class="voteButton" onclick="redArrowIfClicked(this, '2')">
+            ><button id="button2" class="voteButton">
               &#8593;</button
-            ><button id="button3" class="voteButton" onclick="redArrowIfClicked(this, '3')">
+            ><button id="button3" class="voteButton">
               &#8593;</button
-            ><button id="button4" class="voteButton" onclick="redArrowIfClicked(this, '4')">
+            ><button id="button4" class="voteButton">
               &#8593;</button
-            ><button id="button5" class="voteButton" onclick="redArrowIfClicked(this, '5')">
+            ><button id="button5" class="voteButton">
               &#8593;</button
-            ><button id="button6" class="voteButton" onclick="redArrowIfClicked(this, '6')">
+            ><button id="button6" class="voteButton">
               &#8593;</button
-            ><button id="button7" class="voteButton" onclick="redArrowIfClicked(this, '7')">
+            ><button id="button7" class="voteButton">
               &#8593;
             </button>
           </div>

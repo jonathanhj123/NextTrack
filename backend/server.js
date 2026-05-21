@@ -13,6 +13,9 @@ import { pool } from "../db/connect.js";
 // Imports the request file from express
 import req from "express/lib/request.js";
 
+import { checkSessions, advanceSession } from "./CA.js"
+setInterval(checkSessions, 300); //Importere check/advance sessionen ved startup. Mindre clutter!
+
 // the pool() function from connect.js assigns it to the variable "db"
 const db = pool();
 
@@ -62,42 +65,31 @@ server.post("/api/leaveSession", leaveSession);
 
 
 function onEachRequest(request, response, next) {
+  //
   console.log(new Date(), request.method, request.url);
   next();
 } //logging
 
 
 //kendt kode fra dataforståelse
-//dette giver os mulighed for at fetche noget fra /songs i frontend
-server.get("/tracks", loadTracks); 
-
+server.get("/tracks", loadTracks); //dette giver os mulighed for at fetche noget fra /songs i frontend
 
 async function loadTracks(request, response) {
-
   //load songs til progress.js.
-  const dbResolve = await db.query(
-    `
+  const dbResolve = await db.query(`
     select tracks.length, tracks.title, tracks.artist_name
     from tracks
     order by random()
-    `
-  );
-
+  `);
   const rows = dbResolve.rows;
-
   if (rows.length === 0) {
-
     response.sendStatus(404);
-
   } else {
-
     response.json(rows);
-
   }
 }
 
-
-// Function for checking if user exists
+//
 async function checkIfUserExists(request, response) {
 
   const username = request.params.username;
@@ -208,9 +200,7 @@ async function registerUser(request, response) {
 
     //catch-all for andre fejl.
     else response.status(500).json({ error: err.message });
-
   }
-
 }
 
 
@@ -249,23 +239,43 @@ async function createSession(request, response) {
       //vi skal have userId fra frontend, da vi skal vide hvilken bruger der har lavet sessionen
       [sessionId, request.body.userId], 
     );
-
     console.log("user session update success");
 
     //Nu har vi tilføjet session id til brugeren, så går vi videre:
     //Sidst men ikke mindst laver vi en tom kø/session tracks
     await db.query(
       `
-      insert into session_tracks (session_id, track_id, fallback_order)
-      select $1, track_id, row_number() over (order by track_id)
+      insert into session_tracks (session_id, track_id)
+      select $1, track_id
       from tracks
-      `,
+    `,
       [sessionId],
     );
-    //todo forstå sql her
+    //randomiser tracks inde i session_tracks.
+
+    //vælg en random til at være currently_playing når vi starter en session.
+
+    await db.query(
+      `
+      update session_tracks
+        set currently_playing = true,
+        current_started_at = CURRENT_TIMESTAMP
+
+      where (session_id, track_id) = (
+        select
+        session_id, track_id
+        
+        from session_tracks
+        where session_id = $1
+        order by random()
+        limit 1
+        )
+      `,
+      [sessionId], //Vi skal vælge en random track inde for X session_id til at være den der afspiller når vi starter en sang.
+    );
+
 
     response.json({ success: true, sessionId });
-
   } catch (err) {
 
     console.log(err);
@@ -274,6 +284,61 @@ async function createSession(request, response) {
   }
 
 }
+
+
+server.get("/api/getCurrentStatus", getCurrentStatus); //Her får vi status (noget af det første vi går) når vi loader.
+async function getCurrentStatus(request, response) {
+  try {
+    const sessionId = request.query.session_id; //Query paramateren er session_id.
+    const dbResult = await db.query(`
+      select t.title as SongTitle, t.artist_name as Artist, st.track_id as TrackId, st.current_started_at as starttime, t.length as duration
+      from session_tracks st
+      join tracks t on t.track_id = st.track_id
+      where session_id = $1
+      and currently_playing = true
+      `,
+      [sessionId], //Hvilken sang afspiller? Og vis den. Send også en masse ting der er relevante hertil nedeunder.
+    );
+    const row = dbResult.rows[0]; //definere svaret i rows
+    const songtitle = row.songtitle; //definere de forskellige svar
+    const artist = row.artist;
+    const starttime = row.starttime; 
+    const duration = row.duration;
+    const servertime = Date.now();
+
+    response.json({ songtitle, artist, starttime, duration, servertime });
+  } catch (err) {
+    console.log("error during getting status:", err);
+  }
+}
+
+server.get("/api/getTrackListing", getTrackListing);
+async function getTrackListing(request, response) { //Funktion til at samle nuværende sange i session_tracks for X session_id til queue listing. Næstne samme kode som overfor
+  //spammer...console.log("get listing"); //debug
+  
+  try {
+    const sessionId = request.query.session_id;
+    const dbResult = await db.query(`
+      select t.title as SongTitle, t.artist_name as Artist, st.track_id as TrackId, count(v.user_id) as votes
+        from session_tracks st
+        left join votes v using (session_id, track_id)
+        join tracks t on t.track_id = st.track_id
+      where session_id = $1
+        and currently_playing = false
+
+      group by
+        t.title, t.artist_name, st.track_id
+      `,
+      [sessionId],
+    );
+
+    response.json(dbResult.rows);
+
+  } catch (err) {
+    console.log("error during getting listing", err);
+  }
+}
+
 
 
 // Function for joining a session
@@ -321,7 +386,6 @@ async function joinSession(request, response) {
 
       response.json({ success: true }); 
       console.log("user session update success");
-
     }
 
   } catch (err) {
@@ -338,33 +402,25 @@ async function joinSession(request, response) {
 async function leaveSession(request, response) {
 
   try {
-
-    // Updating the session_id to null if user leaves
-    const dbResult = await db.query(
-      `
+    const dbResult = await db.query(`
       update users
       set session_id = null
       where user_id = $1
     `,
-    [request.body.user_id],
+    [request.body.user_id]
     );
 
     // Error if user couldn't be found
     if (dbResult.rowCount === 0) {
 
       console.log("Couldn't find user to leave session");
-
       return response.status(404).json({error: "User not found"});
-
     }
 
     response.json({succes: true});
 
-    // error message
   } catch(err) {
-
     response.status(500).json({ error: "Something went wrong - Couldn't leave Session"});
-
   }
 
 }
@@ -374,4 +430,44 @@ function onServerReady() {
 
   console.log("Populii server running on port", port);
 
+}
+
+
+
+//tak til chat for debug
+server.post("/api/debugSkip", debugSkip);
+async function debugSkip(
+    request,
+    response
+) {
+
+    try {
+
+        const sessionId =
+            request.body.session_id;
+
+        await advanceSession(
+            sessionId
+        );
+
+        response.json({
+            success: true
+        });
+
+        console.log(
+            "debug skipped:",
+            sessionId
+        );
+
+    } catch(err) {
+
+        console.log(
+            "debug skip error:",
+            err
+        );
+
+        response.status(500).json({
+            error: err.message
+        });
+    }
 }
