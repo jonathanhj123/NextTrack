@@ -67,11 +67,11 @@ server.get("/api/getUserId/:username", getUserId);
 server.post("/api/leaveSession", leaveSession);
 
 
-function onEachRequest(request, response, next) {
-  //
-  console.log(new Date(), request.method, request.url);
+function onEachRequest(req,res,next){
+  if(!req.url.includes("getTrackListing")) //jeg vil ikke spammes
+    console.log(new Date(),req.method,req.url);
   next();
-} //logging
+}
 
 
 //kendt kode fra dataforståelse
