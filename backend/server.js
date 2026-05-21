@@ -14,7 +14,10 @@ import { pool } from "../db/connect.js";
 import req from "express/lib/request.js";
 
 import { checkSessions, advanceSession } from "./CA.js"
-setInterval(checkSessions, 300); //Importere check/advance sessionen ved startup. Mindre clutter!
+setInterval(checkSessions, 3000); //Importere check/advance sessionen ved startup. Mindre clutter!
+
+//Meget hacky fix. Kortere check vil betyde, at vi kan risikere at vi advancer session imens den allerde er igang.
+//Så får vi noget bøvl med at vi kan tilføje en sang der allerede er på køen, ogås crasher vi.
 
 // the pool() function from connect.js assigns it to the variable "db"
 const db = pool();
@@ -64,11 +67,11 @@ server.get("/api/getUserId/:username", getUserId);
 server.post("/api/leaveSession", leaveSession);
 
 
-function onEachRequest(request, response, next) {
-  //
-  console.log(new Date(), request.method, request.url);
+function onEachRequest(req,res,next){
+  if(!req.url.includes("getTrackListing")) //jeg vil ikke spammes
+    console.log(new Date(),req.method,req.url);
   next();
-} //logging
+}
 
 
 //kendt kode fra dataforståelse
