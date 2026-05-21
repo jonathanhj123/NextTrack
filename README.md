@@ -1,8 +1,8 @@
 # Populii
 
-> En delt musikafspiller, hvor alle stemmer om, hvad der spiller næste.
+> En musikafspiller til deling, hvor alle stemmer om, hvad der spiller næste gang.
 
-Populii er en webapp bygget som semesterprojekt på ITA's 1. semester. Brugerne opretter eller tilmelder sig en delt musikafspiller — en "kø" — og stemmer i realtid om, hvilken sang der spiller næst. Sangen med flest stemmer vinder. Ingen DJ nødvendig.
+Populii er en webapp til semesterprojekt på ITA's 1. semester. Brugerne opretter eller tilmelder sig en delt musikafspiller — en "kø" — og stemmer i realtid om, hvilken sang der spiller næste gang. Sangen med flest stemmer vinder.
 
 ---
 
@@ -11,8 +11,8 @@ Populii er en webapp bygget som semesterprojekt på ITA's 1. semester. Brugerne 
 - **Opret bruger og log ind** med brugernavn, adgangskode, e-mail, alder, land og køn
 - **Opret en kø** — få et unikt 6-cifret kø-ID, du kan dele med andre
 - **Tilmeld dig en kø** — skriv kø-ID'et ind for at hoppe ind i en andens session
-- **Gå solo** — lyt alene uden at tilmelde dig en delt kø
-- **Stem** — hver bruger får én stemme pr. runde; sangen med flest stemmer spiller næst
+- **Go solo** — lyt alene uden at tilmelde dig en delt kø
+- **Stem** — hver bruger får én stemme pr. runde; sangen med flest stemmer spiller næste gang
 - **Progressionsbjælke i realtid** — viser, hvor langt du er i den aktuelle sang
 - **Dynamisk coverbillede** — opdateres automatisk baseret på den aktuelle kunstner
 - **Forlad kø til enhver tid** — forlad køen og vend tilbage til sessionmenuen
@@ -23,7 +23,7 @@ Populii er en webapp bygget som semesterprojekt på ITA's 1. semester. Brugerne 
 
 | Lag          | Teknologi                         |
 |--------------|-----------------------------------|
-| Frontend     | Vanilla HTML, CSS og JavaScript   |
+| Frontend     | HTML, CSS og JavaScript           |
 | Backend      | Node.js + Express 5               |
 | Database     | PostgreSQL (hostet på Neon)       |
 | Databasedriver | `pg` (node-postgres)            |
