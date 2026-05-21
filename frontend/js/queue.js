@@ -158,7 +158,7 @@ function redArrowIfClicked(buttonElement, counterId) {
   // Checks if the user has voted
   if (hasUserVoted) {
     // It will show an alert
-    alert("You can only vote once!");
+    showPopup("You can only vote once!");
     return;
   }
 
@@ -286,4 +286,17 @@ function ResetButtons() {
     hasUserVoted = false;
     votedButton = null;
   }
+}
+
+function showPopup(message) {
+  if (document.querySelector(".error-popup")) return;
+
+  const popup = document.createElement("div");
+  popup.className = "error-popup";
+  popup.textContent = message;
+  document.body.appendChild(popup);
+
+  setTimeout(() => {
+    popup.remove();
+  }, 2500);
 }

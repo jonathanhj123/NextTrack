@@ -345,8 +345,8 @@ async function leaveSession(request, response) {
       update users
       set session_id = null
       where user_id = $1
-      `,
-    [request.body.user_id]
+    `,
+    [request.body.user_id],
     );
 
     // Error if user couldn't be found

@@ -63,16 +63,15 @@ form.addEventListener("submit", async (tjek) => {
     console.log("email check fail"); //debug
     return;
   }
-  //Alder tjek med kyndig hjælp fra chatten. Det skal læses følgende:
-  /*
-/.../ er selveste udtrykket, ^ er starten på strengen, \d+ betyder en eller flere cifre, $ er slutningen på strengen. Så det her tjekker om hele strengen kun består af tal.
-*/
-  if (!/^\d+$/.test(ageInput.value)) {
+
+  // Tjekker om input på Age er et tal. Hvis ikke, slettes input og fejlbesked vises
+  const val = ageInput.value;
+
+  if (isNaN(val) || val === " ") {
+    ageInput.value = "";
     showPopup("Age must be numbers only");
-    console.log("age check fail"); //debug
     return;
   }
-  //Man kunne lave et alder tjek her...
 
   //Selveste dataen indhentes, efter tjek:
 
