@@ -14,7 +14,10 @@ import { pool } from "../db/connect.js";
 import req from "express/lib/request.js";
 
 import { checkSessions, advanceSession } from "./CA.js"
-setInterval(checkSessions, 300); //Importere check/advance sessionen ved startup. Mindre clutter!
+setInterval(checkSessions, 3000); //Importere check/advance sessionen ved startup. Mindre clutter!
+
+//Meget hacky fix. Kortere check vil betyde, at vi kan risikere at vi advancer session imens den allerde er igang.
+//Så får vi noget bøvl med at vi kan tilføje en sang der allerede er på køen, ogås crasher vi.
 
 // the pool() function from connect.js assigns it to the variable "db"
 const db = pool();
