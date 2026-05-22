@@ -1,5 +1,6 @@
 // '(' i starten og ')()' til slut gør, at koden kører automatisk, så snart den indlæses
-(async function () {
+async function coverArt() {
+  //console.log("load coverart.js")
   // artistMap gemmer vores "Navn til ID" par (f.eks. { "Taylor Swift": "1" })
   const artistMap = {};
 
@@ -30,6 +31,7 @@
       );
     }
   }
+  await loadArtistMapping();
 
   //Funktionen håndterer opdateringen af billedet
   function updateImage(id) {
@@ -51,28 +53,9 @@
     const imagePath = id ? `/trackart/${id}.jpg` : "/coverart.jpg";
     img.src = imagePath;
   }
+  window.updateImage = updateImage;
+  window.coverArt = coverArt; //global export, samme som vi benytter i vote
+  window.artistMap = artistMap;
+  //også lidt hjælp fra chat til at vide hvor vi skal globalt eksportere, for at minimere token brug
+}
 
-  // Funktionen holder øje med skærmen for ændringer
-  function checkForArtistChange() {
-    // Find det element, hvor progress.js skriver kunstnerens navn
-    const artistElem = document.getElementById("artistname");
-
-    // Hent teksten og fjern overflødige mellemrum
-    const currentArtist = artistElem.textContent.trim();
-
-    // Vi opdaterer kun billedet, hvis artist er anderledes
-    if (currentArtist && currentArtist !== lastArtist) {
-      lastArtist = currentArtist;
-
-      // Slå ID'et op
-      const artistId = artistMap[currentArtist.toLowerCase()];
-
-      updateImage(artistId);
-    }
-  }
-  await loadArtistMapping();
-
-  // Den kører checkForArtistChange hvert 500. millisekund (to gange i sekundet)
-  setInterval(checkForArtistChange, 500);
-  console.log("Cover Art script er klar og kører..."); //debug
-})();
