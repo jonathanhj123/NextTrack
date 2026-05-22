@@ -1,7 +1,11 @@
+import {coverArt, updateImage} from "./coverArt.js"
+
 
 document.addEventListener("DOMContentLoaded", async () => {
     const rows = await loadSession(); //Vi skal vente på at rows er defineret, så kalder vi det andet ved load af siden.
     await updateTrackListing();
+    coverArt();
+    updateImage();
     updateArtistTitle(rows);
     updatePlayingTime(rows);
     setInterval(updateTrackListing, 2000); 
@@ -88,6 +92,7 @@ function updatePlayingTime(rows) { //Lidt samme kode som vi havde i queue.js, de
                 updateArtistTitle(rows);
                 updatePlayingTime(rows);
                 updateTrackListing();
+                updateImage();
             }, 310);
             //ekstrem hacky måde at sikre brugeren ikke sprøger for tidligt. aldrig gør det her i virkeligheden
             console.log("User go for next track"); 
