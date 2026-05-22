@@ -31,47 +31,6 @@ Populii er en webapp til semesterprojekt på ITA's 1. semester. Brugerne oprette
 
 ---
 
-## Projektstruktur
-
-```
-NextTrack/
-├── backend/
-│   └── server.js          # Express-serveren og alle API-ruter
-├── db/
-│   ├── connect.js         # PostgreSQL-forbindelsespulje
-│   ├── createDb.js        # Sletter og gendanner databaseskemaet, importerer CSV-data
-│   ├── tracks.csv         # Startdata — alle sange
-│   └── users.csv          # Startdata — demo-brugere
-├── frontend/
-│   ├── index.html         # Forside / velkomstside
-│   ├── login.html         # Login-formular
-│   ├── register.html      # Registreringsformular
-│   ├── session.html       # Vælg: opret kø, tilmeld kø eller gå solo
-│   ├── join.html          # Indtast et 6-cifret kø-ID
-│   ├── dashboard.html     # Hovedvisningen med kø og stemmeafgivelse
-│   ├── solo.html          # Solo-lyttetilstand
-│   ├── js/
-│   │   ├── login.js       # Login-logik
-│   │   ├── register.js    # Registreringslogik og validering
-│   │   ├── session.js     # Viderestilling til tilmeld / solo
-│   │   ├── create.js      # Opret en ny køsession
-│   │   ├── join.js        # Tilmeld dig en eksisterende køsession
-│   │   ├── queue.js       # Stemmeafgivelse, afspilning og progressionsbjælke
-│   │   ├── coverArt.js    # Dynamisk coverbillede baseret på aktuel kunstner
-│   │   └── leave.js       # Forlad den aktuelle kø
-│   └── *.css              # Sidespecifikke stilarter samt universal.css
-├── images/
-│   ├── trackart/          # Coverbilleder pr. kunstner (1.jpg – 10.jpg)
-│   ├── artist.csv         # Knytter kunstnernavne til billedernes ID'er
-│   ├── coverart.jpg       # Standard reservebillede
-│   └── favicon.ico
-├── package.json
-├── .env                   # Databaseoplysninger (ikke inkluderet i Git)
-└── runserver.bat          # Windows-genvej til at starte udviklingsserveren
-```
-
----
-
 ## Databaseskema
 
 ```
@@ -83,21 +42,6 @@ votes           — stemmeregistrering (vote_id, user_id, session_track_id)
 ```
 
 Sessions-ID'er starter ved **100001** for at sikre, at kø-ID'et altid er 6 cifre.
-
----
-
-## API-endepunkter
-
-| Metode | Sti                               | Beskrivelse                                    |
-|--------|-----------------------------------|------------------------------------------------|
-| GET    | `/api/checkIfUserExists/:username`| Returnerer `true` eller `false`                |
-| POST   | `/api/checkPassword`              | Validerer brugernavn og adgangskode            |
-| POST   | `/api/register`                   | Opretter en ny brugerkonto                     |
-| GET    | `/api/getUserId/:username`        | Returnerer brugerens ID                        |
-| POST   | `/api/createSession`              | Opretter en ny kø og tilknytter opretteren     |
-| GET    | `/session/:session_id`            | Validerer et sessions-ID og tilmelder brugeren |
-| POST   | `/api/leaveSession`               | Sætter `session_id = null` for brugeren        |
-| GET    | `/tracks`                         | Returnerer alle sange i tilfældig rækkefølge   |
 
 ---
 
