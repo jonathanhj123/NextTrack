@@ -1,5 +1,5 @@
 // '(' i starten og ')()' til slut gør, at koden kører automatisk, så snart den indlæses
-export async function coverArt() {
+async function coverArt() {
   // artistMap gemmer vores "Navn til ID" par (f.eks. { "Taylor Swift": "1" })
   const artistMap = {};
 
@@ -32,7 +32,7 @@ export async function coverArt() {
   }
 
   //Funktionen håndterer opdateringen af billedet
-export function updateImage(id) {
+  function updateImage(id) {
     const container = document.getElementById("coverArt");
 
     let img = container.querySelector("img");
@@ -52,3 +52,5 @@ export function updateImage(id) {
     img.src = imagePath;
   }
 }
+
+window.coverArt = coverArt; //global export, samme som vi benytter i vote
