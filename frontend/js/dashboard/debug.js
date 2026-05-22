@@ -28,5 +28,9 @@ async function debugSkip() {
     updateTrackListing();
 
     ResetButtons();
+
+    const artistId = window.artistMap[rows.artist.toLowerCase().trim()];
+    updateImage(artistId); //klader update af artist imaget
+
 }
 //Kald i browseren ved at skrive debugSkip() i konsol.

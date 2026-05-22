@@ -16,13 +16,6 @@ await db.query("create schema public"); //JEG ELSKER SCHEMA!!
 //await db.query("drop table if exists session_tracks");
 //await db.query("drop table if exists session_nt"); //Session kan vi bare blive ved med at lave, så giver ingen grund til at droppe den.
 //await db.query("drop table if exists tracks");
-/*
-Vi har alle pt. data i vores SQL. Giver ingen mening at køre det her,
-eller generelt createdb, konstant.
-Gør det lokalt.
-*/
-
-//TODO sessions
 
 // Lav users table
 await db.query(`

@@ -1,14 +1,21 @@
-import {coverArt, updateImage} from "./coverArt.js"
-
 
 document.addEventListener("DOMContentLoaded", async () => {
     const rows = await loadSession(); //Vi skal vente på at rows er defineret, så kalder vi det andet ved load af siden.
     await updateTrackListing();
-    coverArt();
-    updateImage();
     updateArtistTitle(rows);
     updatePlayingTime(rows);
     setInterval(updateTrackListing, 2000); 
+
+    await coverArt();
+    const artistId = window.artistMap[rows.artist.toLowerCase().trim()];
+    updateImage(artistId);
+    /*
+    Kyndig hjælp fra chatten, til at få coverArt til at fitte ind i load.js, så vi ikke konstant poller og derved bruger tonsvis af tokens
+    inde i coverArt.js.
+    Men kort sagt:
+    Vi får artistnavn fra rows.artist, gør det lowercase og fjerner evt. mellemrum, så det matcher de nøgler vi har i artistMap.
+    Så slår vi artistId op via artistmap.
+    */
 });
 /*
 I toppen her beder vi browseren om at gøre en masser når HTML er loadet.
@@ -92,7 +99,9 @@ function updatePlayingTime(rows) { //Lidt samme kode som vi havde i queue.js, de
                 updateArtistTitle(rows);
                 updatePlayingTime(rows);
                 updateTrackListing();
-                updateImage();
+                const artistId = window.artistMap[rows.artist.toLowerCase().trim()];
+                updateImage(artistId); //klader update af artist imaget
+
             }, 310);
             //ekstrem hacky måde at sikre brugeren ikke sprøger for tidligt. aldrig gør det her i virkeligheden
             console.log("User go for next track"); 
@@ -112,6 +121,14 @@ async function updateTrackListing() { //Her skal vi have fat i listen til højre
             const row = rows[songNum];
             const container = document.getElementById("leftBottomRightDiv"); //DOM på det element der håndtere dem
             const table = document.getElementById(`song${songNum}`);
+
+            if(!table) continue; //hvis table er null(går over 8), skal den bare fortsætte.
+            /*
+            Dette er også en edge-case fiks, da når vi kører vores advanceSession, er der et kort øjeblik hvor at currently-playing = false er 9 sange.
+            Da updateTrackListing kører i interval, kan der være en situation, hvor den opdatere lige præcist i dette øjeblik.
+            Det giver en fejl i browseren, men jeg har dog ikke oplevet det ren faktisk kan ses i frontenden ved at give en fejl i listing.
+            */
+
             const cells = table.querySelectorAll("td"); //vi har 2 celler i hver sang, en til titel og en til artist, så vi selecter begge celler
 
         // Selects the two cells inside the table

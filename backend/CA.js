@@ -9,7 +9,16 @@ const db = pool();
 // The Server uses port 3010
 const port = 3010;
 
-export async function checkSessions() {
+const advancingSessions = new Set();
+/*
+Set holder unikke værdier.
+Det vil sige, at vi heri når en session advancer (kode længere nede) holder fast i den værdi.
+Så skule checkSessions finde ud af den værdi skal advance - IMENS DEN ER IGANG MED AT ADVANCE - så gør den det ikke.
+Dette sikrer imod en edge-case, hvor at databasen er tilpas langsom nok til, at der når at blive kaldet advanceSession to gange på samme tid.
+Dette kan betyde, at der kommer 8 nye tracks to gange, hvor en af dem er de samme, som de ikke må, kva. at alle sange skal være unikke i vores tracks list.
+*/
+
+export async function checkSessions() { //denne funktion kører i interval (se server.js) og tjekker om der skal skiftes sang i X session.
     const sessions = await db.query(`
         select st.session_id, st.track_id, st.current_started_at, t.length
         from session_tracks st
@@ -34,8 +43,15 @@ export async function checkSessions() {
     }
 }
 
-export async function advanceSession(sessionId) { //få sessionId fra før.
+export async function advanceSession(sessionId) { //få sessionId fra før. Denne bliver kaldt, hvis checkSessions kan se, at man skal have ny sang på.
+
+    if (advancingSessions.has(sessionId)) return; //Hvis denne session allerede er ved at advance, skal vi bare give serveren tid, og ikke kalde det her igen
+
+    advancingSessions.add(sessionId);
     console.log("advancing session", sessionId);
+
+    try {
+
     await db.query(`
         update session_tracks
         set currently_playing = false
@@ -80,7 +96,10 @@ export async function advanceSession(sessionId) { //få sessionId fra før.
     );
 //refresh votes
 
-    refreshSession(sessionId);
+    await refreshSession(sessionId);
+    } finally { //finally er når et promise (hvad en await gør) er blevet fuldført. Altså - vi spørger server - når den "finally" er færdig, gør vi...
+        advancingSessions.delete(sessionId); //fjerner sessionid fra vores set.
+    }
 }
 
 async function refreshSession(sessionId) { //funktion til at refresh sessionen. dvs fjern votes og add nye sange til queue.

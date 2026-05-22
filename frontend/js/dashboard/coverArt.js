@@ -1,5 +1,6 @@
 // '(' i starten og ')()' til slut gør, at koden kører automatisk, så snart den indlæses
 async function coverArt() {
+  //console.log("load coverart.js")
   // artistMap gemmer vores "Navn til ID" par (f.eks. { "Taylor Swift": "1" })
   const artistMap = {};
 
@@ -30,6 +31,7 @@ async function coverArt() {
       );
     }
   }
+  await loadArtistMapping();
 
   //Funktionen håndterer opdateringen af billedet
   function updateImage(id) {
@@ -51,6 +53,9 @@ async function coverArt() {
     const imagePath = id ? `/trackart/${id}.jpg` : "/coverart.jpg";
     img.src = imagePath;
   }
+  window.updateImage = updateImage;
+  window.coverArt = coverArt; //global export, samme som vi benytter i vote
+  window.artistMap = artistMap;
+  //også lidt hjælp fra chat til at vide hvor vi skal globalt eksportere, for at minimere token brug
 }
 
-window.coverArt = coverArt; //global export, samme som vi benytter i vote
